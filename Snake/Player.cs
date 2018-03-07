@@ -9,6 +9,11 @@ namespace Snake
 {
     public class Player
     {
-        SnakeBody snek;
+		public Player()
+		{
+			snek = new SnakeBody(3);
+		}
+
+        public SnakeBody snek;
     }
 }

@@ -1,18 +1,21 @@
 ﻿using Snake.Interface;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace Snake
 {
-    public class SnakePiece : IDrawable, ICollidable
+    public class SnakePiece : Tile, ICollidable
     {
+		public SnakePiece(int x, int y, int width, int height) : base(x, y, width, height)
+		{
+
+		}
+		Pen pen = new Pen(Color.Black);
+
         public void Draw(Graphics g)
         {
-            throw new NotImplementedException();
+			g.DrawRectangle(pen, X, Y, Width, Height);
         }
 
         public bool Intersects(object obj)

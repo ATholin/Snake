@@ -8,7 +8,7 @@ using Snake.Interface;
 
 namespace Snake
 {
-    public abstract class Food : IDrawable, ICollidable
+    public abstract class Food : ICollidable
     {
         public void Draw(Graphics g)
         {

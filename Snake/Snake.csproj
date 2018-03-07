@@ -49,7 +49,6 @@
     <Compile Include="Food.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="Interface\ICollidable.cs" />
-    <Compile Include="Interface\IDrawable.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

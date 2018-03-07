@@ -15,6 +15,9 @@ namespace Snake
 		public SnakeGame()
 		{
 			InitializeComponent();
+
+			var gboard = new GameBoard(10, 1);
+			Controls.Add(gboard);
 		}
 	}
 }
