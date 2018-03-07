@@ -21,7 +21,6 @@ namespace Snake
 			Y = 20;
 			Width = 20;
 			Height = 20;
-			direction = Direction.Right;
 
 			for (int i = 0; i < SnakeBody.Length; i++)
 			{
@@ -30,11 +29,13 @@ namespace Snake
 			}
 		}
 
+		public bool HasMoved;
 		Rectangle[] SnakeBody;
 		Pen pen;
 		public Rectangle[] Snakebody => SnakeBody;
 		int X, Y, Width, Height;
-		public Direction direction;
+
+		int lastX, lastY;
 
 		public void Draw(Graphics g)
 		{
@@ -61,13 +62,17 @@ namespace Snake
 			throw new NotImplementedException();
 		}
 
-		public void MoveSnake()
+		public void MoveSnake(Direction direction)
 		{
 			for (int i = SnakeBody.Length - 1; i > 0; i--)
 			{
 
 				SnakeBody[i] = SnakeBody[i - 1];
 			}
+
+			lastY = Y;
+			lastX = X;
+
 			switch (direction)
 			{
 				case Direction.Up:

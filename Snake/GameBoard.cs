@@ -17,7 +17,9 @@ namespace Snake
             Dock = DockStyle.Fill;
 
 			snakes[0] = snake;
+			snakes[1] = snake2;
 			this.players[0] = new ControlKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
+			this.players[1] = new ControlKeys(Keys.W, Keys.S, Keys.A, Keys.D, snakes[1]);
 
 			Dimension = dimension;
 
@@ -25,36 +27,39 @@ namespace Snake
 			
 			timer = new Timer();
 			timer.Tick += new EventHandler(TimerEventHandler);
-			timer.Interval = 1000 / 10;
+			timer.Interval = 1000/10;
 			timer.Start();
 			
 		}
 
 		int Dimension;
 		Timer timer;
-		Snake snake = new Snake();
 
-		ControlKeys[] players = new ControlKeys[1];
-		public Snake[] snakes = new Snake[1];
+		Snake snake = new Snake();
+		Snake snake2 = new Snake();
+
+		ControlKeys[] players = new ControlKeys[2];
+		public Snake[] snakes = new Snake[2];
 
 		
 
 		private void TimerEventHandler(object sender, EventArgs e)
 		{
-			snake.MoveSnake();
-			/*
+			foreach (var p in players)
+			{
+				p.MoveSnake();
+			}
 			foreach(var snek in snakes)
 			{
-				snek.MoveSnake();
 				foreach(var enemysnek in snakes)
 				{
 					if (snek.Intersects(enemysnek.Snakebody))
 					{
-						//finish later...
+						snek.OnCollision(enemysnek);
 					}
 				}
+				snek.HasMoved = true;
 			}
-			*/
 			Refresh();
 		}
 
@@ -62,7 +67,10 @@ namespace Snake
 		{
 			var p = sender as Panel;
 			e.Graphics.FillRectangle(new SolidBrush(Color.Black), p.DisplayRectangle);
-			snake.Draw(e.Graphics);
+			foreach (var s in snakes)
+			{
+				s.Draw(e.Graphics);
+			}
 		}
 		internal void MoveUp(Keys key)
 		{
@@ -70,8 +78,7 @@ namespace Snake
 			{
 				if (player.Up == key)
 				{
-					player.ChangeDir(Direction.Up);
-					player.MoveSnake();
+						player.ChangeDir(Direction.Up);
 				}
 			}
 		}
@@ -82,8 +89,7 @@ namespace Snake
 			{
 				if (player.Down == key)
 				{
-					player.ChangeDir(Direction.Down);
-					player.MoveSnake();
+						player.ChangeDir(Direction.Down);
 				}
 			}
 		}
@@ -94,8 +100,7 @@ namespace Snake
 			{
 				if (player.Left == key)
 				{
-					player.ChangeDir(Direction.Left);
-					player.MoveSnake();
+						player.ChangeDir(Direction.Left);
 				}
 			}
 		}
@@ -106,8 +111,7 @@ namespace Snake
 			{
 				if (player.Right == key)
 				{
-					player.ChangeDir(Direction.Right);
-					player.MoveSnake();
+						player.ChangeDir(Direction.Right);
 				}
 			}
 		}

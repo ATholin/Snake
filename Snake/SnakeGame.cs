@@ -16,11 +16,13 @@ namespace Snake
 		{
 			InitializeComponent();
 
-			game = new GameBoard(20, 1);
+			game = new GameBoard(20, 2);
 			Controls.Add(game);
 
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
+
+			DoubleBuffered = false;
 		}
 		
 		GameBoard game;
@@ -28,6 +30,7 @@ namespace Snake
 		{
 			switch (e.KeyCode)
 			{
+				//PLAYER ONE
 				case Keys.Up:
 					game.MoveUp(e.KeyCode);
 					break;
@@ -38,6 +41,20 @@ namespace Snake
 					game.MoveLeft(e.KeyCode);
 					break;
 				case Keys.Right:
+					game.MoveRight(e.KeyCode);
+					break;
+
+				//PLAYER TWO
+				case Keys.W:
+					game.MoveUp(e.KeyCode);
+					break;
+				case Keys.S:
+					game.MoveDown(e.KeyCode);
+					break;
+				case Keys.A:
+					game.MoveLeft(e.KeyCode);
+					break;
+				case Keys.D:
 					game.MoveRight(e.KeyCode);
 					break;
 			}

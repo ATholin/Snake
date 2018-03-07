@@ -16,6 +16,7 @@ namespace Snake
 			Left = left;
 			Right = right;
 			Snake = snake;
+			direction = Direction.Right;
 		}
 
 		Snake Snake;
@@ -24,15 +25,44 @@ namespace Snake
 		public Keys Down;
 		public Keys Left;
 		public Keys Right;
+		Direction direction;
 
 		public void MoveSnake()
 		{
-			Snake.MoveSnake();
+			Snake.MoveSnake(direction);
 		}
 
 		public void ChangeDir(Direction dir)
 		{
-			Snake.direction = dir;
+			if (!IsOppositeDir(dir) && Snake.HasMoved)
+			{
+				direction = dir;
+				Snake.HasMoved = false;
+			}
+		}
+
+		bool IsOppositeDir(Direction newdir)
+		{
+			if (direction == Direction.Up && newdir == Direction.Down)
+			{
+				return true;
+			}
+
+			if (direction == Direction.Down && newdir == Direction.Up)
+			{
+				return true;
+			}
+
+			if (direction == Direction.Left && newdir == Direction.Right)
+			{
+				return true;
+			}
+
+			if (direction == Direction.Right && newdir == Direction.Left)
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }
