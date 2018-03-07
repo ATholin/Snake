@@ -16,15 +16,14 @@ namespace Snake
 		{
 			InitializeComponent();
 
-			game = new GameBoard(10, 1);
+			game = new GameBoard(20, 1);
 			Controls.Add(game);
 
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
 		}
-
+		
 		GameBoard game;
-
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.KeyCode)

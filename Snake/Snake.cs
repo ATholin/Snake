@@ -15,7 +15,7 @@ namespace Snake
 		{
 			pen = new Pen(Color.White);
 
-			SnakeBody = new Rectangle[3];
+			SnakeBody = new Rectangle[10];
 
 			X = 20;
 			Y = 20;
@@ -30,7 +30,6 @@ namespace Snake
 			}
 		}
 
-		ControlKeys controls;
 		Rectangle[] SnakeBody;
 		Pen pen;
 		public Rectangle[] Snakebody => SnakeBody;
@@ -39,7 +38,6 @@ namespace Snake
 
 		public void Draw(Graphics g)
 		{
-			g.TranslateTransform(200, 0);
 			for (int i = 0; i < SnakeBody.Length; i++)
 			{
 				g.DrawRectangle(pen, SnakeBody[i]);

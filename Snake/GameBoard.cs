@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,9 +16,8 @@ namespace Snake
 		{
             Dock = DockStyle.Fill;
 
-			snakes[snakes.Length] = snake;
-			dictionary = new Dictionary<ControlKeys, Snake>(players);
-			dictionary.Add(new ControlKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right), snake);
+			snakes[0] = snake;
+			this.players[0] = new ControlKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
 
 			Dimension = dimension;
 
@@ -25,19 +25,19 @@ namespace Snake
 			
 			timer = new Timer();
 			timer.Tick += new EventHandler(TimerEventHandler);
-			timer.Interval = 1000 / 5;
+			timer.Interval = 1000 / 10;
 			timer.Start();
 			
 		}
 
+		int Dimension;
 		Timer timer;
 		Snake snake = new Snake();
 
-		Dictionary<ControlKeys, Snake> dictionary;
-
+		ControlKeys[] players = new ControlKeys[1];
 		public Snake[] snakes = new Snake[1];
 
-		int Dimension;
+		
 
 		private void TimerEventHandler(object sender, EventArgs e)
 		{
@@ -64,51 +64,50 @@ namespace Snake
 			e.Graphics.FillRectangle(new SolidBrush(Color.Black), p.DisplayRectangle);
 			snake.Draw(e.Graphics);
 		}
-
 		internal void MoveUp(Keys key)
 		{
-			foreach (var player in dictionary)
+			foreach (var player in players)
 			{
-				if (player.Key.Up == key)
+				if (player.Up == key)
 				{
-					var snek = dictionary[player.Key];
-					snek.direction = Direction.Up;
+					player.ChangeDir(Direction.Up);
+					player.MoveSnake();
 				}
 			}
 		}
 
 		internal void MoveDown(Keys key)
 		{
-			foreach (var player in dictionary)
+			foreach (var player in players)
 			{
-				if (player.Key.Down == key)
+				if (player.Down == key)
 				{
-					var snek = dictionary[player.Key];
-					snek.direction = Direction.Down;
+					player.ChangeDir(Direction.Down);
+					player.MoveSnake();
 				}
 			}
 		}
 
 		internal void MoveLeft(Keys key)
 		{
-			foreach (var player in dictionary)
+			foreach (var player in players)
 			{
-				if (player.Key.Left == key)
+				if (player.Left == key)
 				{
-					var snek = dictionary[player.Key];
-					snek.direction = Direction.Left;
+					player.ChangeDir(Direction.Left);
+					player.MoveSnake();
 				}
 			}
 		}
 
 		internal void MoveRight(Keys key)
 		{
-			foreach (var player in dictionary)
+			foreach (var player in players)
 			{
-				if (player.Key.Right == key)
+				if (player.Right == key)
 				{
-					var snek = dictionary[player.Key];
-					snek.direction = Direction.Right;
+					player.ChangeDir(Direction.Right);
+					player.MoveSnake();
 				}
 			}
 		}

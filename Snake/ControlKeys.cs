@@ -7,19 +7,32 @@ using System.Windows.Forms;
 
 namespace Snake
 {
-	class ControlKeys
+	public class ControlKeys
 	{
-		public ControlKeys(Keys up, Keys down, Keys left, Keys right)
+		public ControlKeys(Keys up, Keys down, Keys left, Keys right, Snake snake)
 		{
 			Up = up;
 			Down = down;
 			Left = left;
 			Right = right;
+			Snake = snake;
 		}
 
-		public Keys Up { get { return Up; } private set { } }
-		public Keys Down { get { return Down; } private set { } }
-		public Keys Left { get { return Right; } private set { } }
-		public Keys Right { get { return Right; } private set { } }
+		Snake Snake;
+
+		public Keys Up;
+		public Keys Down;
+		public Keys Left;
+		public Keys Right;
+
+		public void MoveSnake()
+		{
+			Snake.MoveSnake();
+		}
+
+		public void ChangeDir(Direction dir)
+		{
+			Snake.direction = dir;
+		}
 	}
 }
