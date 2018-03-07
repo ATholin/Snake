@@ -6,6 +6,6 @@ namespace Snake.Interface
     {
         bool Intersects(object obj);
         void OnCollision(object obj);
-		void Draw(Graphics g);
-	}
+        void Draw(Graphics g);
+    }
 }

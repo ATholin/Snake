@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Snake.Interface;
+using System.Drawing;
 
 namespace Snake
 {
@@ -12,40 +13,48 @@ namespace Snake
     {
 		public GameBoard(int dimension, int players)
 		{
-			this.Dock = DockStyle.Fill;
-
+            Dock = DockStyle.Fill;
+            
 			Dimension = dimension;
 
 			CreatePlayers(players);
-
-			timer = new Timer();
-			this.Paint += new PaintEventHandler(Draw);
+            foreach (var player in this.players)
+            {
+                collidables.Add(player.snek.AddPiece(50, 50, 50, 50));
+            }
+            timer = new Timer();
+            Paint += new PaintEventHandler(Draw);
 			timer.Tick += new EventHandler(TimerEventHandler);
 			timer.Interval = 1000 / 25;
 			timer.Start();
 		}
 
-		HashSet<ICollidable> collidables = new HashSet<ICollidable>();
+		public HashSet<ICollidable> collidables = new HashSet<ICollidable>();
 		HashSet<Player> players;
         int Dimension;
 		Timer timer;
 
 		private void TimerEventHandler(Object obj, EventArgs args)
 		{
-
-		}
+            Paint += new PaintEventHandler(Draw);
+        }
 
 		public void Draw(Object obj, PaintEventArgs args)
 		{
-			foreach (var c in collidables)
+            foreach (var c in collidables)
 			{
-				c.Draw(args.Graphics);
+                c.Draw(args.Graphics);
+
 			}
 		}
 
 		public void CreatePlayers(int players)
 		{
 			this.players = new HashSet<Player>();
+            foreach (var player in this.players)
+            {
+                collidables.Add(player.snek.AddPiece(50,50,50,50));
+            }
 		}
     }
 }

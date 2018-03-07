@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Snake.Interface;
 
 namespace Snake
 {
@@ -13,10 +14,17 @@ namespace Snake
 		{
 			pieces = new LinkedList<SnakePiece>();
 			Length = length;
-			pieces.AddLast(new SnakePiece(50, 50, 50, 50));
-			pieces.AddLast(new SnakePiece(100, 50, 50, 50));
-			pieces.AddLast(new SnakePiece(150, 50, 50, 50));
-		}
+            AddPiece(50, 50, 50, 50);
+            AddPiece(100, 50, 50, 50);
+            AddPiece(150, 50, 50, 50);
+        }
+
+        public SnakePiece AddPiece(int x, int y, int w, int h)
+        {
+            SnakePiece newPiece = new SnakePiece(x, y, w, h);
+            pieces.AddLast(newPiece);
+            return newPiece;
+        }
 
 		int Length;
 
