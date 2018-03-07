@@ -16,8 +16,32 @@ namespace Snake
 		{
 			InitializeComponent();
 
-			var gboard = new GameBoard(10, 1);
-			Controls.Add(gboard);
+			game = new GameBoard(10, 1);
+			Controls.Add(game);
+
+			KeyDown += GameForm_KeyDown;
+			KeyPreview = true;
+		}
+
+		GameBoard game;
+
+		private void GameForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			switch (e.KeyCode)
+			{
+				case Keys.Up:
+					game.MoveUp(e.KeyCode);
+					break;
+				case Keys.Down:
+					game.MoveDown(e.KeyCode);
+					break;
+				case Keys.Left:
+					game.MoveLeft(e.KeyCode);
+					break;
+				case Keys.Right:
+					game.MoveRight(e.KeyCode);
+					break;
+			}
 		}
 	}
 }

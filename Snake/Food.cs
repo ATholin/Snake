@@ -15,8 +15,8 @@ namespace Snake
             throw new NotImplementedException();
         }
 
-        public abstract bool Intersects(object obj);
+		public abstract bool Intersects(Rectangle[] obj);
 
-        public abstract void OnCollision(object obj);
+		public abstract void OnCollision(object obj);
     }
 }

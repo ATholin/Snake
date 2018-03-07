@@ -14,47 +14,103 @@ namespace Snake
 		public GameBoard(int dimension, int players)
 		{
             Dock = DockStyle.Fill;
-            
+
+			snakes[snakes.Length] = snake;
+			dictionary = new Dictionary<ControlKeys, Snake>(players);
+			dictionary.Add(new ControlKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right), snake);
+
 			Dimension = dimension;
 
-			CreatePlayers(players);
-            foreach (var player in this.players)
-            {
-                collidables.Add(player.snek.AddPiece(50, 50, 50, 50));
-            }
-            timer = new Timer();
-            Paint += new PaintEventHandler(Draw);
+			Paint += new PaintEventHandler(Draw);
+			
+			timer = new Timer();
 			timer.Tick += new EventHandler(TimerEventHandler);
-			timer.Interval = 1000 / 25;
+			timer.Interval = 1000 / 5;
 			timer.Start();
+			
 		}
 
-		public HashSet<ICollidable> collidables = new HashSet<ICollidable>();
-		HashSet<Player> players;
-        int Dimension;
 		Timer timer;
+		Snake snake = new Snake();
 
-		private void TimerEventHandler(Object obj, EventArgs args)
-		{
-            Paint += new PaintEventHandler(Draw);
-        }
+		Dictionary<ControlKeys, Snake> dictionary;
 
-		public void Draw(Object obj, PaintEventArgs args)
+		public Snake[] snakes = new Snake[1];
+
+		int Dimension;
+
+		private void TimerEventHandler(object sender, EventArgs e)
 		{
-            foreach (var c in collidables)
+			snake.MoveSnake();
+			/*
+			foreach(var snek in snakes)
 			{
-                c.Draw(args.Graphics);
+				snek.MoveSnake();
+				foreach(var enemysnek in snakes)
+				{
+					if (snek.Intersects(enemysnek.Snakebody))
+					{
+						//finish later...
+					}
+				}
+			}
+			*/
+			Refresh();
+		}
 
+		private void Draw(object sender, PaintEventArgs e)
+		{
+			var p = sender as Panel;
+			e.Graphics.FillRectangle(new SolidBrush(Color.Black), p.DisplayRectangle);
+			snake.Draw(e.Graphics);
+		}
+
+		internal void MoveUp(Keys key)
+		{
+			foreach (var player in dictionary)
+			{
+				if (player.Key.Up == key)
+				{
+					var snek = dictionary[player.Key];
+					snek.direction = Direction.Up;
+				}
 			}
 		}
 
-		public void CreatePlayers(int players)
+		internal void MoveDown(Keys key)
 		{
-			this.players = new HashSet<Player>();
-            foreach (var player in this.players)
-            {
-                collidables.Add(player.snek.AddPiece(50,50,50,50));
-            }
+			foreach (var player in dictionary)
+			{
+				if (player.Key.Down == key)
+				{
+					var snek = dictionary[player.Key];
+					snek.direction = Direction.Down;
+				}
+			}
 		}
-    }
+
+		internal void MoveLeft(Keys key)
+		{
+			foreach (var player in dictionary)
+			{
+				if (player.Key.Left == key)
+				{
+					var snek = dictionary[player.Key];
+					snek.direction = Direction.Left;
+				}
+			}
+		}
+
+		internal void MoveRight(Keys key)
+		{
+			foreach (var player in dictionary)
+			{
+				if (player.Key.Right == key)
+				{
+					var snek = dictionary[player.Key];
+					snek.direction = Direction.Right;
+				}
+			}
+		}
+	}
 }

@@ -4,7 +4,7 @@ namespace Snake.Interface
 {
     public interface ICollidable
     {
-        bool Intersects(object obj);
+        bool Intersects(Rectangle[] obj);
         void OnCollision(object obj);
         void Draw(Graphics g);
     }
