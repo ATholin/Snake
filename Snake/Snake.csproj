@@ -59,6 +59,9 @@
     <Compile Include="SnakeGame.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SnakeGame.Designer.cs">
+      <DependentUpon>SnakeGame.cs</DependentUpon>
+    </Compile>
     <Compile Include="SnakePiece.cs" />
     <Compile Include="Tile.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -70,6 +73,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SnakeGame.resx">
+      <DependentUpon>SnakeGame.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
