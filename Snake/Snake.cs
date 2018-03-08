@@ -11,37 +11,37 @@ namespace Snake
 {
 	public class Snake : ICollidable
 	{
-		public Snake()
+		public Snake(int x, int y, int size)
 		{
-			pen = new Pen(Color.White);
+			brush = new SolidBrush(Color.White);
 
-			SnakeBody = new Rectangle[10];
+			SnakeBody = new Rectangle[3];
 
-			X = 20;
-			Y = 20;
-			Width = 20;
-			Height = 20;
+			X = x;
+			Y = y;
+			SnakeSize = size;
 
 			for (int i = 0; i < SnakeBody.Length; i++)
 			{
-				SnakeBody[i] = new Rectangle(X, Y, Width, Height);
-				X += 20;
+				SnakeBody[i] = new Rectangle(X, Y, SnakeSize, SnakeSize);
+				X += SnakeSize;
 			}
 		}
 
+<<<<<<< HEAD
+=======
 		public bool HasMoved;
+>>>>>>> 371065194639246aedc29c9d08d31bc1eccd41d3
 		Rectangle[] SnakeBody;
-		Pen pen;
+		SolidBrush brush;
 		public Rectangle[] Snakebody => SnakeBody;
-		int X, Y, Width, Height;
-
-		int lastX, lastY;
+		int X, Y, SnakeSize;
 
 		public void Draw(Graphics g)
 		{
 			for (int i = 0; i < SnakeBody.Length; i++)
 			{
-				g.DrawRectangle(pen, SnakeBody[i]);
+				g.FillRectangle(brush, SnakeBody[i]);
 			}
 		}
 
@@ -70,26 +70,23 @@ namespace Snake
 				SnakeBody[i] = SnakeBody[i - 1];
 			}
 
-			lastY = Y;
-			lastX = X;
-
 			switch (direction)
 			{
 				case Direction.Up:
-					SnakeBody[0].Y -= 20;
-					Y -= 20;
+					SnakeBody[0].Y -= SnakeSize;
+					Y -= SnakeSize;
 					break;
 				case Direction.Down:
-					SnakeBody[0].Y += 20;
-					Y += 20;
+					SnakeBody[0].Y += SnakeSize;
+					Y += SnakeSize;
 					break;
 				case Direction.Left:
-					SnakeBody[0].X -= 20;
-					X -= 20;
+					SnakeBody[0].X -= SnakeSize;
+					X -= SnakeSize;
 					break;
 				case Direction.Right:
-					SnakeBody[0].X += 20;
-					X += 20;
+					SnakeBody[0].X += SnakeSize;
+					X += SnakeSize;
 					break;
 			}
 		}
