@@ -7,9 +7,9 @@ using System.Windows.Forms;
 
 namespace Snake
 {
-	public class ControlKeys
+	public class Player
 	{
-		public ControlKeys(Keys up, Keys down, Keys left, Keys right, Snake snake)
+		public Player(Keys up, Keys down, Keys left, Keys right, Snake snake)
 		{
 			Up = up;
 			Down = down;
@@ -20,6 +20,13 @@ namespace Snake
 		}
 
 		Snake Snake;
+		Score score = new Score(0);
+		public int points { get { return score.score; } }
+
+		public void SetPoints(int points)
+		{
+			score.UpdateScore(points);
+		}
 
 		public Keys Up;
 		public Keys Down;

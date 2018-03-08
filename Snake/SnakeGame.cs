@@ -16,15 +16,31 @@ namespace Snake
 		{
 			InitializeComponent();
 
-			game = new GameBoard(20, 2);
+			game = new GameBoard(20, 3);
 			Controls.Add(game);
+
+			scorepanel = new ScorePanel(game);
+			Controls.Add(scorepanel);
 
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
 
 			DoubleBuffered = false;
+
+			timer = new Timer();
+			timer.Tick += new EventHandler(TimerEventHandler);
+			timer.Interval = 1000 / 10;
+			timer.Start();
 		}
-		
+
+		private void TimerEventHandler(object sender, EventArgs e)
+		{
+			game.Tick();
+			scorepanel.Refresh();
+		}
+
+		Timer timer;
+		ScorePanel scorepanel;
 		GameBoard game;
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{

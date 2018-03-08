@@ -13,7 +13,7 @@ namespace Snake
 	{
 		public Snake()
 		{
-			pen = new Pen(Color.White);
+			brush = new SolidBrush(Color.White);
 
 			SnakeBody = new Rectangle[10];
 
@@ -29,9 +29,11 @@ namespace Snake
 			}
 		}
 
+		
+
 		public bool HasMoved;
 		Rectangle[] SnakeBody;
-		Pen pen;
+		SolidBrush brush;
 		public Rectangle[] Snakebody => SnakeBody;
 		int X, Y, Width, Height;
 
@@ -41,7 +43,7 @@ namespace Snake
 		{
 			for (int i = 0; i < SnakeBody.Length; i++)
 			{
-				g.DrawRectangle(pen, SnakeBody[i]);
+				g.FillRectangle(brush, SnakeBody[i]);
 			}
 		}
 
