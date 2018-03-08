@@ -16,22 +16,13 @@ namespace Snake
 		{
 			InitializeComponent();
 
-<<<<<<< HEAD
-			game = new GameBoard(20, 1);
-=======
-			int dimension = 25;
-			Width = 500;
-			game = new GameBoard(dimension, 2, Width);
->>>>>>> 371065194639246aedc29c9d08d31bc1eccd41d3
+			game = new GameBoard(20, 2);
 			Controls.Add(game);
 
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
-<<<<<<< HEAD
-=======
 
 			DoubleBuffered = false;
->>>>>>> 371065194639246aedc29c9d08d31bc1eccd41d3
 		}
 		
 		GameBoard game;
