@@ -12,36 +12,42 @@ namespace Snake
 {
     public class GameBoard : Panel
     {
-		public GameBoard(int dimension, int players)
+		public GameBoard(int dimension, int players, int size)
 		{
-            Dock = DockStyle.Fill;
+
+			BoardSize = Width = Height = size;
+
+			Dimension = dimension;
+			snake = new Snake((BoardSize / Dimension) * 3, (BoardSize / Dimension) * 1, BoardSize / Dimension);
+			snake2 = new Snake((BoardSize / Dimension) * 3, (BoardSize / Dimension) * 3, BoardSize / Dimension);
 
 			snakes[0] = snake;
 			snakes[1] = snake2;
 			this.players[0] = new ControlKeys(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
 			this.players[1] = new ControlKeys(Keys.W, Keys.S, Keys.A, Keys.D, snakes[1]);
 
-			Dimension = dimension;
+			
+
+			snake = new Snake(Width / Dimension * 3, Height / Dimension * 1, this.Width / Dimension);
+			snake2 = new Snake(Width / Dimension * 3, Height / Dimension * 1, this.Width / Dimension);
+
 
 			Paint += new PaintEventHandler(Draw);
 			
 			timer = new Timer();
 			timer.Tick += new EventHandler(TimerEventHandler);
 			timer.Interval = 1000/10;
-			timer.Start();
-			
+			timer.Start();			
 		}
-
+		int BoardSize;
 		int Dimension;
 		Timer timer;
 
-		Snake snake = new Snake();
-		Snake snake2 = new Snake();
+		Snake snake;
+		Snake snake2;
 
 		ControlKeys[] players = new ControlKeys[2];
-		public Snake[] snakes = new Snake[2];
-
-		
+		public Snake[] snakes = new Snake[2];			
 
 		private void TimerEventHandler(object sender, EventArgs e)
 		{

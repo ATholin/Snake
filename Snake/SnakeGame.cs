@@ -16,7 +16,9 @@ namespace Snake
 		{
 			InitializeComponent();
 
-			game = new GameBoard(20, 2);
+			int dimension = 25;
+			Width = 500;
+			game = new GameBoard(dimension, 2, Width);
 			Controls.Add(game);
 
 			KeyDown += GameForm_KeyDown;
