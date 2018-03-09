@@ -22,6 +22,8 @@ namespace Snake
 
 		public ISet<Snake> snakes = new HashSet<Snake>();
 		public ISet<Snake> toRemove = new HashSet<Snake>();
+        public ISet<Food> foods = new HashSet<Food>();
+        public ISet<Food> foodToRemove = new HashSet<Food>();
 
 		public Player[] Players { get
 			{
@@ -76,6 +78,12 @@ namespace Snake
 
 		public void Tick()
 		{
+            Random rand = new Random();
+            int generate = rand.Next(1,101);
+            if (generate >= 90)
+            {
+                //spawnFood
+            }
 			int index = 0;
 			foreach (var p in players.Values)
 			{
