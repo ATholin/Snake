@@ -12,39 +12,67 @@ namespace Snake
 {
     public class GameBoard : Panel
     {
+		int Dimension;
+
+		Snake snake = new Snake();
+		Snake snake2 = new Snake();
+
+		Dictionary<Keys, Player> players;
+
+		public Snake[] snakes = new Snake[2];
+
+		public Player[] Players { get
+			{
+				Player[] p = new Player[players.Count];
+				int index = 0;
+				foreach(var player in players)
+				{
+					p[index++] = player.Value;
+				}
+				return p;
+			}
+		}
+
+		public delegate void ScoreChangedHandler();
+		public event ScoreChangedHandler ScoreChanged;
+
 		public GameBoard(int dimension, int players)
 		{
-            Dock = DockStyle.Fill;
+			Dock = DockStyle.Fill;
 
 			snakes[0] = snake;
 			snakes[1] = snake2;
-			this.players[0] = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
-			this.players[1] = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snakes[1]);
+
+			this.players = new Dictionary<Keys, Player>(players);
+
+			var player = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
+			this.players.Add(Keys.Up, player);
+			this.players.Add(Keys.Down, player);
+			this.players.Add(Keys.Left, player);
+			this.players.Add(Keys.Right, player);
+
+			//this.players[0] = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
+			//this.players[1] = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snakes[1]);
 
 			Dimension = dimension;
 
 			Paint += new PaintEventHandler(Draw);
 		}
 
-		int Dimension;
-
-		Snake snake = new Snake();
-		Snake snake2 = new Snake();
-
-		Player[] players = new Player[2];
-		public Snake[] snakes = new Snake[2];
-
-		public Player[] Players { get { return players; } }
-
 		public void Tick()
 		{
-			players[1].SetPoints(snake.Snakebody[0].X);
 			foreach (var p in players)
 			{
-				p.MoveSnake();
+				p.Value.MoveSnake();
 			}
+
 			foreach(var snek in snakes)
 			{
+				if (snek.Snakebody[0].X > Width || snek.Snakebody[0].X < 0 || snek.Snakebody[0].Y > Height || snek.Snakebody[0].Y < 0)
+				{
+					snek.OnCollision(null);
+				}
+
 				foreach(var enemysnek in snakes)
 				{
 					if (snek.Intersects(enemysnek.Snakebody))
@@ -54,7 +82,6 @@ namespace Snake
 				}
 				snek.HasMoved = true;
 			}
-			Refresh();
 		}
 
 		private void Draw(object sender, PaintEventArgs e)
@@ -68,46 +95,22 @@ namespace Snake
 		}
 		internal void MoveUp(Keys key)
 		{
-			foreach (var player in players)
-			{
-				if (player.Up == key)
-				{
-						player.ChangeDir(Direction.Up);
-				}
-			}
+			players[key].ChangeDir(Direction.Up);
 		}
 
 		internal void MoveDown(Keys key)
 		{
-			foreach (var player in players)
-			{
-				if (player.Down == key)
-				{
-						player.ChangeDir(Direction.Down);
-				}
-			}
+			players[key].ChangeDir(Direction.Down);
 		}
 
 		internal void MoveLeft(Keys key)
 		{
-			foreach (var player in players)
-			{
-				if (player.Left == key)
-				{
-						player.ChangeDir(Direction.Left);
-				}
-			}
+			players[key].ChangeDir(Direction.Left);
 		}
 
 		internal void MoveRight(Keys key)
 		{
-			foreach (var player in players)
-			{
-				if (player.Right == key)
-				{
-						player.ChangeDir(Direction.Right);
-				}
-			}
+			players[key].ChangeDir(Direction.Right);
 		}
 	}
 }

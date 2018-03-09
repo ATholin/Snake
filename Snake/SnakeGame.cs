@@ -12,7 +12,11 @@ namespace Snake
 {
 	public partial class SnakeGame : Form
 	{
-		public SnakeGame()
+		Timer timer;
+		ScorePanel scorepanel;
+		GameBoard game;
+
+		public SnakeGame() : base()
 		{
 			InitializeComponent();
 
@@ -25,6 +29,8 @@ namespace Snake
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
 
+			game.ScoreChanged += Game_ScoreChanged;
+
 			DoubleBuffered = false;
 
 			timer = new Timer();
@@ -33,15 +39,17 @@ namespace Snake
 			timer.Start();
 		}
 
-		private void TimerEventHandler(object sender, EventArgs e)
+		private void Game_ScoreChanged()
 		{
-			game.Tick();
 			scorepanel.Refresh();
 		}
 
-		Timer timer;
-		ScorePanel scorepanel;
-		GameBoard game;
+		private void TimerEventHandler(object sender, EventArgs e)
+		{
+			game.Tick();
+			game.Refresh();
+		}
+
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.KeyCode)

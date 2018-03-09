@@ -29,15 +29,11 @@ namespace Snake
 			}
 		}
 
-		
-
 		public bool HasMoved;
 		Rectangle[] SnakeBody;
 		SolidBrush brush;
 		public Rectangle[] Snakebody => SnakeBody;
 		int X, Y, Width, Height;
-
-		int lastX, lastY;
 
 		public void Draw(Graphics g)
 		{
@@ -61,7 +57,6 @@ namespace Snake
 
 		public void OnCollision(object obj)
 		{
-			throw new NotImplementedException();
 		}
 
 		public void MoveSnake(Direction direction)
@@ -71,9 +66,6 @@ namespace Snake
 
 				SnakeBody[i] = SnakeBody[i - 1];
 			}
-
-			lastY = Y;
-			lastX = X;
 
 			switch (direction)
 			{
