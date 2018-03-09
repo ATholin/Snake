@@ -16,10 +16,11 @@ namespace Snake
 
 		Snake snake = new Snake();
 		Snake snake2 = new Snake();
+		Snake snake3 = new Snake();
 
 		Dictionary<Keys, Player> players;
 
-		public Snake[] snakes = new Snake[2];
+		public Snake[] snakes = new Snake[3];
 
 		public Player[] Players { get
 			{
@@ -42,6 +43,7 @@ namespace Snake
 
 			snakes[0] = snake;
 			snakes[1] = snake2;
+			snakes[2] = snake3;
 
 			this.players = new Dictionary<Keys, Player>(players);
 
@@ -50,6 +52,18 @@ namespace Snake
 			this.players.Add(Keys.Down, player);
 			this.players.Add(Keys.Left, player);
 			this.players.Add(Keys.Right, player);
+
+			var player2 = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snake2);
+			this.players.Add(Keys.W, player2);
+			this.players.Add(Keys.S, player2);
+			this.players.Add(Keys.A, player2);
+			this.players.Add(Keys.D, player2);
+
+			var player3 = new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3);
+			this.players.Add(Keys.I, player3);
+			this.players.Add(Keys.K, player3);
+			this.players.Add(Keys.J, player3);
+			this.players.Add(Keys.L, player3);
 
 			//this.players[0] = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
 			//this.players[1] = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snakes[1]);
@@ -61,13 +75,18 @@ namespace Snake
 
 		public void Tick()
 		{
-			foreach (var p in players)
+			int index = 0;
+			foreach (var p in players.Values)
 			{
-				p.Value.MoveSnake();
+				if (index++ % 4 != 0)
+					continue;
+				p.MoveSnake();
+				
 			}
 
 			foreach(var snek in snakes)
 			{
+				snek.HasMoved = true;
 				if (snek.Snakebody[0].X > Width || snek.Snakebody[0].X < 0 || snek.Snakebody[0].Y > Height || snek.Snakebody[0].Y < 0)
 				{
 					snek.OnCollision(null);
@@ -80,7 +99,7 @@ namespace Snake
 						snek.OnCollision(enemysnek);
 					}
 				}
-				snek.HasMoved = true;
+				
 			}
 		}
 

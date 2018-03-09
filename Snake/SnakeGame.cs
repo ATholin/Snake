@@ -35,7 +35,7 @@ namespace Snake
 
 			timer = new Timer();
 			timer.Tick += new EventHandler(TimerEventHandler);
-			timer.Interval = 1000 / 10;
+			timer.Interval = 1000/10;
 			timer.Start();
 		}
 
@@ -79,6 +79,20 @@ namespace Snake
 					game.MoveLeft(e.KeyCode);
 					break;
 				case Keys.D:
+					game.MoveRight(e.KeyCode);
+					break;
+
+				//PLAYER THREE
+				case Keys.I:
+					game.MoveUp(e.KeyCode);
+					break;
+				case Keys.K:
+					game.MoveDown(e.KeyCode);
+					break;
+				case Keys.J:
+					game.MoveLeft(e.KeyCode);
+					break;
+				case Keys.L:
 					game.MoveRight(e.KeyCode);
 					break;
 			}

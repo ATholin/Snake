@@ -15,17 +15,16 @@ namespace Snake
 		{
 			brush = new SolidBrush(Color.White);
 
-			SnakeBody = new Rectangle[10];
+			SnakeBody = new Rectangle[20];
 
 			X = 20;
 			Y = 20;
-			Width = 20;
-			Height = 20;
+			SnakeSize = 20;
 
 			for (int i = 0; i < SnakeBody.Length; i++)
 			{
-				SnakeBody[i] = new Rectangle(X, Y, Width, Height);
-				X += 20;
+				SnakeBody[i] = new Rectangle(X, Y, SnakeSize, SnakeSize);
+				X += SnakeSize;
 			}
 		}
 
@@ -33,7 +32,7 @@ namespace Snake
 		Rectangle[] SnakeBody;
 		SolidBrush brush;
 		public Rectangle[] Snakebody => SnakeBody;
-		int X, Y, Width, Height;
+		int X, Y, SnakeSize;
 
 		public void Draw(Graphics g)
 		{
@@ -47,7 +46,7 @@ namespace Snake
 		{
 			foreach(var snekpart in enemysnek)
 			{
-				if (SnakeBody[0].IntersectsWith(snekpart) && SnakeBody[0] != snekpart)
+				if (SnakeBody[0].Location.Equals(snekpart.Location) && !SnakeBody[0].Equals(snekpart))
 				{
 					return true;
 				}
@@ -70,20 +69,16 @@ namespace Snake
 			switch (direction)
 			{
 				case Direction.Up:
-					SnakeBody[0].Y -= 20;
-					Y -= 20;
+					SnakeBody[0].Y -= SnakeSize;
 					break;
 				case Direction.Down:
-					SnakeBody[0].Y += 20;
-					Y += 20;
+					SnakeBody[0].Y += SnakeSize;
 					break;
 				case Direction.Left:
-					SnakeBody[0].X -= 20;
-					X -= 20;
+					SnakeBody[0].X -= SnakeSize;
 					break;
 				case Direction.Right:
-					SnakeBody[0].X += 20;
-					X += 20;
+					SnakeBody[0].X += SnakeSize;
 					break;
 			}
 		}
