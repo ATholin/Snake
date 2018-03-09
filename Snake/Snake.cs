@@ -11,17 +11,18 @@ namespace Snake
 {
 	public class Snake : ICollidable
 	{
-		public Snake()
+		public Snake(int x, int y, Color color)
 		{
 			brush = new SolidBrush(Color.White);
 
-			SnakeBody = new Rectangle[20];
+			SnakeBody = new Rectangle[10];
 
-			X = 20;
-			Y = 20;
+			X = x;
+			Y = y;
+			brush.Color = color;
 			SnakeSize = 20;
 
-			for (int i = 0; i < SnakeBody.Length; i++)
+			for (int i = SnakeBody.Length-1; i >= 0; i--)
 			{
 				SnakeBody[i] = new Rectangle(X, Y, SnakeSize, SnakeSize);
 				X += SnakeSize;
@@ -31,7 +32,10 @@ namespace Snake
 		public bool HasMoved;
 		Rectangle[] SnakeBody;
 		SolidBrush brush;
+
+		public Color SnakeColor { get { return brush.Color; } }
 		public Rectangle[] Snakebody => SnakeBody;
+
 		int X, Y, SnakeSize;
 
 		public void Draw(Graphics g)
@@ -46,16 +50,25 @@ namespace Snake
 		{
 			foreach(var snekpart in enemysnek)
 			{
-				if (SnakeBody[0].Location.Equals(snekpart.Location) && !SnakeBody[0].Equals(snekpart))
+				if (!SnakeBody[0].Equals(snekpart))
 				{
-					return true;
+					if (SnakeBody[0].IntersectsWith(snekpart))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
 		}
 
-		public void OnCollision(object obj)
+		public void OnCollision()
 		{
+			//Add 5 pts
+		}
+
+		public void OnCollision(Food food)
+		{
+			food.OnCollision(this);
 		}
 
 		public void MoveSnake(Direction direction)
@@ -81,6 +94,11 @@ namespace Snake
 					SnakeBody[0].X += SnakeSize;
 					break;
 			}
+		}
+
+		public void OnCollision(object obj)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

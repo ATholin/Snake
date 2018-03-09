@@ -14,13 +14,14 @@ namespace Snake
     {
 		int Dimension;
 
-		Snake snake = new Snake();
-		Snake snake2 = new Snake();
-		Snake snake3 = new Snake();
+		Snake snake = new Snake(60, 100, Color.Blue);
+		Snake snake2 = new Snake(60, 200, Color.Red);
+		Snake snake3 = new Snake(60, 300, Color.Green);
 
 		Dictionary<Keys, Player> players;
 
-		public Snake[] snakes = new Snake[3];
+		public ISet<Snake> snakes = new HashSet<Snake>();
+		public ISet<Snake> toRemove = new HashSet<Snake>();
 
 		public Player[] Players { get
 			{
@@ -41,9 +42,9 @@ namespace Snake
 		{
 			Dock = DockStyle.Fill;
 
-			snakes[0] = snake;
-			snakes[1] = snake2;
-			snakes[2] = snake3;
+			snakes.Add(snake);
+			snakes.Add(snake2);
+			snakes.Add(snake3);
 
 			this.players = new Dictionary<Keys, Player>(players);
 
@@ -89,18 +90,40 @@ namespace Snake
 				snek.HasMoved = true;
 				if (snek.Snakebody[0].X > Width || snek.Snakebody[0].X < 0 || snek.Snakebody[0].Y > Height || snek.Snakebody[0].Y < 0)
 				{
-					snek.OnCollision(null);
+					toRemove.Add(snek);
 				}
 
-				foreach(var enemysnek in snakes)
+				foreach (var enemysnek in snakes)
 				{
-					if (snek.Intersects(enemysnek.Snakebody))
+					if (snek.SnakeColor == enemysnek.SnakeColor)
 					{
-						snek.OnCollision(enemysnek);
+						for (int i = 1; i < snek.Snakebody.Length; i++)
+						{
+							if (snek.Snakebody[0].IntersectsWith(snek.Snakebody[i]))
+							{
+								toRemove.Add(snek);
+							}
+						}
+					}
+					else
+					{
+						foreach (var snakepart in enemysnek.Snakebody)
+						{
+							if (snek.Snakebody[0].IntersectsWith(snakepart))
+							{
+								toRemove.Add(snek);
+								enemysnek.OnCollision();
+							}
+						}
 					}
 				}
-				
+				// Check collision with food here
 			}
+			foreach(var s in toRemove)
+			{
+				snakes.Remove(s);
+			}
+			toRemove.Clear();
 		}
 
 		private void Draw(object sender, PaintEventArgs e)
