@@ -25,6 +25,8 @@ namespace Snake
 		public ISet<Food> Foods = new HashSet<Food>();
 		public ISet<Food> FoodToRemove = new HashSet<Food>();
 
+		int GridSize;
+
 		public Player[] Players { get
 			{
 				Player[] p = new Player[players.Count];
@@ -42,6 +44,7 @@ namespace Snake
 
 		public GameBoard(int dimension, int players)
 		{
+			GridSize = dimension;
 			Dock = DockStyle.Fill;
 
 			Add(snake);
@@ -73,28 +76,12 @@ namespace Snake
 
 			Dimension = dimension;
 			Paint += new PaintEventHandler(Draw);
-			Add(new NormalFood(500, 100, 20));
 		}
 
 		public void Tick()
 		{
-            Random rand = new Random();
-            int generate = rand.Next(1,1001);
-			
-			/*
-            if (generate >= 1)
-            {
-				int X = 500;
-				int Y = 100;
-				int size = 20;
-				//while
-					//Check collision on random position, if empty
-						Add(new NormalFood(X, Y, size));
-						//break;
-            }
-			*/
-
-			int index = 0;
+			SpawnFood();
+            int index = 0;
 			foreach (var p in players.Values)
 			{
 				if (index++ % 4 != 0)
@@ -105,7 +92,7 @@ namespace Snake
 			foreach(var snek in Snakes)
 			{
 				snek.HasMoved = true;
-				if (snek.Snakebody[0].X > Width || snek.Snakebody[0].X < 0 || snek.Snakebody[0].Y > Height || snek.Snakebody[0].Y < 0)
+				if (snek.SnakeHead.X > Width || snek.SnakeHead.X < 0 || snek.SnakeHead.Y > Height || snek.SnakeHead.Y < 0)
 				{
 					ToRemove.Add(snek);
 				}
@@ -131,6 +118,58 @@ namespace Snake
 			}
 
 			RemoveObjects();
+		}
+
+		private void SpawnFood()
+		{
+			Random rand = new Random();
+
+			var foodRect = new Rectangle((int)(Math.Ceiling(rand.Next(0, Width) / 20.0d) * 20), (int)(Math.Ceiling(rand.Next(0, Height) / 20.0d) * 20), GridSize, GridSize);
+
+			while (!CheckEmptySpot(foodRect))
+			{
+				foodRect = new Rectangle((int)(Math.Ceiling(rand.Next(0, Width) / 20.0d) * 20), (int)(Math.Ceiling(rand.Next(0, Height) / 20.0d) * 20), GridSize, GridSize);
+			}
+
+			int generate = rand.Next(0, 1001);
+
+			if (generate <= 50)
+            {
+				if (generate <= 25)
+				{
+					if (generate <= 10)
+					{
+						//Add random snake speed up
+					}
+					//Add Rare 5pts
+				}
+				//Add normal
+				Add(new NormalFood(foodRect));
+				return;
+			}
+		}
+
+		private bool CheckEmptySpot(Rectangle foodRect)
+		{
+			foreach (var snake in Snakes)
+			{
+				foreach (var snakepart in snake.Snakebody)
+				{
+					while (snakepart.IntersectsWith(foodRect))
+					{
+						return false;
+					}
+				}
+			}
+
+			foreach (var food in Foods)
+			{
+				if (food.Piece.IntersectsWith(foodRect))
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		private void Draw(object sender, PaintEventArgs e)

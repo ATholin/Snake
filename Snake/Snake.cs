@@ -17,15 +17,13 @@ namespace Snake
 
 			SnakeBody = new LinkedList<Rectangle>();
 
-			X = x;
-			Y = y;
 			brush.Color = color;
 			SnakeSize = 20;
 
 			for (int i = 0; i < 10; i++)
 			{
-				SnakeBody.AddFirst(new Rectangle(X, Y, SnakeSize, SnakeSize));
-				X += 20;
+				SnakeBody.AddFirst(new Rectangle(x, y, SnakeSize, SnakeSize));
+				x += 20;
 			}
 		}
 
@@ -47,7 +45,8 @@ namespace Snake
 			}
 		}
 
-		int X, Y, SnakeSize;
+		public Rectangle SnakeHead { get { return SnakeBody.First.Value; } }
+		int SnakeSize;
 
 		public void Draw(Graphics g)
 		{
@@ -106,19 +105,15 @@ namespace Snake
 			{
 				case Direction.Up:
 					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y - SnakeSize, SnakeSize, SnakeSize);
-					Y -= SnakeSize;
 					break;
 				case Direction.Down:
 					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y + SnakeSize, SnakeSize, SnakeSize);
-					Y += SnakeSize;
 					break;
 				case Direction.Left:
 					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X - SnakeSize, SnakeBody.First.Value.Y, SnakeSize, SnakeSize);
-					X -= SnakeSize;
 					break;
 				case Direction.Right:
 					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X + SnakeSize, SnakeBody.First.Value.Y, SnakeSize, SnakeSize);
-					X += SnakeSize;
 					break;
 			}
 		}
