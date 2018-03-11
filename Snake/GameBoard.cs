@@ -20,7 +20,10 @@ namespace Snake
 
 		Dictionary<Keys, Player> players;
 
-		public LinkedList<ICollidable> Collidables = new LinkedList<ICollidable>();
+		public ISet<Snake> Snakes = new HashSet<Snake>();
+		public ISet<Snake> ToRemove = new HashSet<Snake>();
+		public ISet<Food> Foods = new HashSet<Food>();
+		public ISet<Food> FoodToRemove = new HashSet<Food>();
 
 		public Player[] Players { get
 			{
@@ -69,79 +72,78 @@ namespace Snake
 			//this.players[1] = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snakes[1]);
 
 			Dimension = dimension;
-
 			Paint += new PaintEventHandler(Draw);
+			Add(new NormalFood(500, 100, 20));
 		}
 
 		public void Tick()
 		{
             Random rand = new Random();
             int generate = rand.Next(1,1001);
+			
+			/*
             if (generate >= 1)
             {
 				int X = 500;
-				int Y = 500;
+				int Y = 100;
 				int size = 20;
 				//while
 					//Check collision on random position, if empty
 						Add(new NormalFood(X, Y, size));
 						//break;
             }
+			*/
+
 			int index = 0;
 			foreach (var p in players.Values)
 			{
 				if (index++ % 4 != 0)
 					continue;
 				p.MoveSnake();
-				
 			}
 
-			foreach(var snek in snakes)
+			foreach(var snek in Snakes)
 			{
 				snek.HasMoved = true;
 				if (snek.Snakebody[0].X > Width || snek.Snakebody[0].X < 0 || snek.Snakebody[0].Y > Height || snek.Snakebody[0].Y < 0)
 				{
-					toRemove.Add(snek);
+					ToRemove.Add(snek);
 				}
+
 				
-				foreach (var enemysnek in snakes)
+				foreach (var enemysnek in Snakes)
 				{
 					if (snek.Intersects(enemysnek))
-						toRemove.Add(snek);
+					{
+						ToRemove.Add(snek);
+						ScoreChanged?.Invoke();
+					}
 				}
-				foreach (var food in foods)
+
+				foreach (var food in Foods)
 				{
 					if (food.Intersects(snek))
 					{
-						food.OnCollision(snek);
-						toRemove.Add(food);
+						FoodToRemove.Add(food);
+						ScoreChanged?.Invoke();
 					}
 				}
 			}
 
-			foreach(var c in toRemove)
-			{
-				if (c is Snake)
-				{
-					var s = c as Snake;
-					snakes.Remove(s);
-				}
-				else
-				{
-					var f = c as Food;
-					foods.Remove(f);
-				}
-			}
-			toRemove.Clear();
+			RemoveObjects();
 		}
 
 		private void Draw(object sender, PaintEventArgs e)
 		{
 			var p = sender as Panel;
 			e.Graphics.FillRectangle(new SolidBrush(Color.Black), p.DisplayRectangle);
-			foreach (var s in snakes)
+			foreach (var s in Snakes)
 			{
 				s.Draw(e.Graphics);
+			}
+			foreach(var f in Foods)
+			{
+				f.Draw(e.Graphics);
 			}
 		}
 		internal void MoveUp(Keys key)
@@ -166,12 +168,27 @@ namespace Snake
 
 		public void Add(Snake snake)
 		{
-			Collidables.AddLast(snake);
+			Snakes.Add(snake);
 		}
 
 		public void Add(Food food)
 		{
-			Collidables.AddFirst(food);
+			Foods.Add(food);
+		}
+
+		public void RemoveObjects()
+		{
+			foreach(var s in ToRemove)
+			{
+				Snakes.Remove(s);
+			}
+			foreach(var f in FoodToRemove)
+			{
+				Foods.Remove(f);
+			}
+
+			FoodToRemove.Clear();
+			ToRemove.Clear();
 		}
 	}
 }

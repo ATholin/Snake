@@ -20,13 +20,6 @@ namespace Snake
 		}
 
 		Snake Snake;
-		Score score = new Score(0);
-		public int points { get { return score.score; } }
-
-		public void SetPoints(int points)
-		{
-			score.UpdateScore(points);
-		}
 
 		public Keys Up;
 		public Keys Down;

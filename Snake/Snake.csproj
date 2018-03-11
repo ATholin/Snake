@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collider.cs" />
     <Compile Include="NormalFood.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Direction.cs" />

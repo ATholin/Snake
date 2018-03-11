@@ -23,15 +23,20 @@ namespace Snake
 
 		public void Draw(Graphics g)
         {
-            throw new NotImplementedException();
-        }
-
-		public bool Intersects(Snake snek)
-		{
-			return FoodPiece.IntersectsWith(snek.Snakebody[0]);
+			g.FillRectangle(brush, FoodPiece);
 		}
 
-		public abstract void OnCollision(Snake snek);
+		public bool Intersects(Snake snake)
+		{
+			if (snake.Snakebody[0].IntersectsWith(this.FoodPiece))
+			{
+				OnCollision(snake);
+				return true;
+			}
+			return false;
+		}
+
+		public abstract void OnCollision(Snake snake);
     }
 
 }

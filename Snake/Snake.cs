@@ -15,34 +15,45 @@ namespace Snake
 		{
 			brush = new SolidBrush(Color.White);
 
-			SnakeBody = new Rectangle[10];
+			SnakeBody = new LinkedList<Rectangle>();
 
 			X = x;
 			Y = y;
 			brush.Color = color;
 			SnakeSize = 20;
 
-			for (int i = SnakeBody.Length-1; i >= 0; i--)
+			for (int i = 0; i < 10; i++)
 			{
-				SnakeBody[i] = new Rectangle(X, Y, SnakeSize, SnakeSize);
-				X += SnakeSize;
+				SnakeBody.AddFirst(new Rectangle(X, Y, SnakeSize, SnakeSize));
+				X += 20;
 			}
 		}
 
+
+		Score score = new Score(0);
+		public int points { get { return score.score; } }
+
 		public bool HasMoved;
-		Rectangle[] SnakeBody;
+		LinkedList<Rectangle> SnakeBody;
 		SolidBrush brush;
 
 		public Color SnakeColor { get { return brush.Color; } }
-		public Rectangle[] Snakebody => SnakeBody;
+		public Rectangle[] Snakebody { get
+			{
+				Rectangle[] badabing = new Rectangle[SnakeBody.Count];
+				SnakeBody.CopyTo(badabing, 0);
+				var badaboom = badabing;
+				return badaboom;
+			}
+		}
 
 		int X, Y, SnakeSize;
 
 		public void Draw(Graphics g)
 		{
-			for (int i = 0; i < SnakeBody.Length; i++)
+			foreach(var snakepart in SnakeBody)
 			{
-				g.FillRectangle(brush, SnakeBody[i]);
+				g.FillRectangle(brush, snakepart);
 			}
 		}
 
@@ -50,23 +61,29 @@ namespace Snake
 		{
 			if (SnakeColor == enemysnek.SnakeColor)
 			{
-				for (int i = 1; i < Snakebody.Length; i++)
+				var node = SnakeBody.First.Next;
+
+				while(node != null)
 				{
-					if (Snakebody[0].IntersectsWith(Snakebody[i]))
+					if (SnakeBody.First.Value.IntersectsWith(node.Value))
 					{
 						return true;
 					}
+					node = node.Next;
 				}
 			}
 			else
 			{
-				foreach (var snakepart in enemysnek.Snakebody)
+				var node = enemysnek.SnakeBody.First;
+
+				while (node != null)
 				{
-					if (Snakebody[0].IntersectsWith(snakepart))
+					if (SnakeBody.First.Value.IntersectsWith(node.Value))
 					{
-						enemysnek.OnCollision();
+						enemysnek.OnCollision(this);
 						return true;
 					}
+					node = node.Next;
 				}
 			}
 			return false;
@@ -74,33 +91,52 @@ namespace Snake
 
 		public void MoveSnake(Direction direction)
 		{
-			for (int i = SnakeBody.Length - 1; i > 0; i--)
-			{
+			var node = SnakeBody.Last;
 
-				SnakeBody[i] = SnakeBody[i - 1];
+			while (node != null)
+			{
+				if (node.Previous != null)
+				{
+					node.Value = node.Previous.Value;
+				}
+				node = node.Previous;
 			}
 
 			switch (direction)
 			{
 				case Direction.Up:
-					SnakeBody[0].Y -= SnakeSize;
+					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y - SnakeSize, SnakeSize, SnakeSize);
+					Y -= SnakeSize;
 					break;
 				case Direction.Down:
-					SnakeBody[0].Y += SnakeSize;
+					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y + SnakeSize, SnakeSize, SnakeSize);
+					Y += SnakeSize;
 					break;
 				case Direction.Left:
-					SnakeBody[0].X -= SnakeSize;
+					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X - SnakeSize, SnakeBody.First.Value.Y, SnakeSize, SnakeSize);
+					X -= SnakeSize;
 					break;
 				case Direction.Right:
-					SnakeBody[0].X += SnakeSize;
+					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X + SnakeSize, SnakeBody.First.Value.Y, SnakeSize, SnakeSize);
+					X += SnakeSize;
 					break;
 			}
 		}
 
-		public void OnCollision(Snake snek)
+		public void OnCollision(Snake snake)
 		{
-			//Check if snek.color != color
-				//Add5pts
+			AddPoints(5);
+		}
+
+		public void Grow(int points) // ;)
+		{
+			SnakeBody.AddLast(new Rectangle(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y, SnakeSize, SnakeSize));
+			AddPoints(points);
+		}
+
+		public void AddPoints(int points)
+		{
+			score.UpdateScore(points);
 		}
 	}
 }

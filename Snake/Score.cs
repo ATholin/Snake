@@ -19,7 +19,7 @@ namespace Snake
 
 		public void UpdateScore(int s)
 		{
-			CurrentScore = score;
+			CurrentScore += s;
 		}
 	}
 }

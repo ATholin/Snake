@@ -14,8 +14,8 @@ namespace Snake
 		{
 			Width = game.Width-30;
 			this.game = game;
-			AddPlayers();
-			playercount = players.Count;
+			AddSnakes();
+			playercount = Snakes.Count;
 			playerpanels = new PlayerPanel[playercount];
 
 			for (int i = 0; i < playerpanels.Length; i++)
@@ -34,10 +34,10 @@ namespace Snake
 		{
 
 			int index = 1;
-			foreach(var p in players)
+			foreach(var s in Snakes)
 			{
-				var s = $"Player {index}: {p.points}";
-				playerpanels[index - 1].SetText(s);
+				var pointstring = $"Player {index}: {s.points}";
+				playerpanels[index - 1].SetText(pointstring);
 				index++;
 				//e.Graphics.DrawString(s, font, brush, new Point((Width / playercount+index), (Height - font.Height) / 2));
 			}
@@ -49,13 +49,13 @@ namespace Snake
 		Brush brush = new SolidBrush(Color.Black);
 
 		GameBoard game;
-		ISet<Player> players = new HashSet<Player>();
+		ISet<Snake> Snakes = new HashSet<Snake>();
 
-		public void AddPlayers()
+		public void AddSnakes()
 		{
-			foreach(var p in game.Players)
+			foreach(var s in game.Snakes)
 			{
-				players.Add(p);
+				Snakes.Add(s);
 			}
 		}
 	}
