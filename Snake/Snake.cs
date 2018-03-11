@@ -46,29 +46,30 @@ namespace Snake
 			}
 		}
 
-		public bool Intersects(Rectangle[] enemysnek)
+		public bool Intersects(Snake enemysnek)
 		{
-			foreach(var snekpart in enemysnek)
+			if (SnakeColor == enemysnek.SnakeColor)
 			{
-				if (!SnakeBody[0].Equals(snekpart))
+				for (int i = 1; i < Snakebody.Length; i++)
 				{
-					if (SnakeBody[0].IntersectsWith(snekpart))
+					if (Snakebody[0].IntersectsWith(Snakebody[i]))
 					{
 						return true;
 					}
 				}
 			}
+			else
+			{
+				foreach (var snakepart in enemysnek.Snakebody)
+				{
+					if (Snakebody[0].IntersectsWith(snakepart))
+					{
+						enemysnek.OnCollision();
+						return true;
+					}
+				}
+			}
 			return false;
-		}
-
-		public void OnCollision()
-		{
-			//Add 5 pts
-		}
-
-		public void OnCollision(Food food)
-		{
-			food.OnCollision(this);
 		}
 
 		public void MoveSnake(Direction direction)
@@ -96,9 +97,10 @@ namespace Snake
 			}
 		}
 
-		public void OnCollision(object obj)
+		public void OnCollision(Snake snek)
 		{
-			throw new NotImplementedException();
+			//Check if snek.color != color
+				//Add5pts
 		}
 	}
 }

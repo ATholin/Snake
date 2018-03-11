@@ -10,25 +10,14 @@ namespace Snake
 {
     class NormalFood : Food, ICollidable
     {
-        public NormalFood(int X, int Y)
+		public NormalFood(int X, int Y, int size)
+		{
+			Init(this, X, Y, size);
+		}
+
+        public override void OnCollision(Snake snek)
         {
-            brush = new SolidBrush(Color.White);
-            FoodPiece = new Rectangle(X, Y, foodSize, foodSize);
-
-        }
-
-        int foodSize = 20;
-        Rectangle FoodPiece;
-        SolidBrush brush;
-
-        public override bool Intersects(Rectangle[] obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void OnCollision(object obj)
-        {
-            throw new NotImplementedException();
+			//snek.Grow();
         }
     }
 }
