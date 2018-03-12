@@ -10,19 +10,17 @@ namespace Snake
 {
 	public abstract class Food : ICollidable
 	{
-		public Food(Rectangle rect)
+		public Food(int x, int y)
 		{
-			FoodPiece = rect;
+			X = x;
+			Y = y;
 			brush = new SolidBrush(Color.Yellow);
 		}
 
-		public Food(int x, int y, int size) : this(new Rectangle(x, y, size, size)) { }
-
-		Rectangle FoodPiece;
 		SolidBrush brush;
-		public int X {get { return FoodPiece.X; } }
-		public int Y { get { return FoodPiece.Y; } }
-		public Rectangle Piece { get { return FoodPiece; } }
+		public int X { get; private set; }
+		public int Y { get; private set; }
+		public Point Piece { get { return new Point(X, Y); } }
 
 		/*
 		public static void Init(Food f, int X, int Y, int size)
@@ -34,12 +32,12 @@ namespace Snake
 
 		public void Draw(Graphics g)
         {
-			g.FillRectangle(brush, FoodPiece);
+			g.FillRectangle(brush, X * Settings.Size, Y * Settings.Size, Settings.Size, Settings.Size);
 		}
 
 		public bool Intersects(Snake snake)
 		{
-			if (snake.SnakeHead.IntersectsWith(this.FoodPiece))
+			if (snake.SnakeBody.First.Equals(Piece))
 			{
 				OnCollision(snake);
 				return true;

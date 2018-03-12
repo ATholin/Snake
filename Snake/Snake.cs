@@ -15,36 +15,34 @@ namespace Snake
 		{
 			brush = new SolidBrush(Color.White);
 
-			SnakeBody = new LinkedList<Rectangle>();
+			SnakeBody = new LinkedList<Point>();
 
 			brush.Color = color;
-			SnakeSize = 20;
 
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				SnakeBody.AddFirst(new Rectangle(x, y, SnakeSize, SnakeSize));
-				x += 20;
+				SnakeBody.AddFirst(new Point(x, y));
+				y += 1;
 			}
 		}
 
 
+		public int counter = 0;
 		Score score = new Score(0);
 		public int points { get { return score.score; } }
 
-		public bool HasMoved;
-		public LinkedList<Rectangle> SnakeBody { get; private set; }
+		public LinkedList<Point> SnakeBody { get; private set; }
 		SolidBrush brush;
 
 		public Color SnakeColor { get { return brush.Color; } }
 
-		public Rectangle SnakeHead { get { return SnakeBody.First.Value; } }
-		int SnakeSize;
+		public Rectangle SnakeHeadRect { get { return new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y, Settings.Size, Settings.Size); } }
 
 		public void Draw(Graphics g)
 		{
 			foreach(var snakepart in SnakeBody)
 			{
-				g.FillRectangle(brush, snakepart);
+				g.FillRectangle(brush, snakepart.X*Settings.Size, snakepart.Y*Settings.Size, Settings.Size, Settings.Size);
 			}
 		}
 
@@ -56,7 +54,7 @@ namespace Snake
 
 				while(node != null)
 				{
-					if (SnakeBody.First.Value.IntersectsWith(node.Value))
+					if (SnakeBody.First.Equals(node.Value))
 					{
 						return true;
 					}
@@ -69,7 +67,7 @@ namespace Snake
 
 				while (node != null)
 				{
-					if (SnakeBody.First.Value.IntersectsWith(node.Value))
+					if (SnakeBody.First.Equals(node.Value))
 					{
 						enemysnek.OnCollision(this);
 						return true;
@@ -96,16 +94,16 @@ namespace Snake
 			switch (direction)
 			{
 				case Direction.Up:
-					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y - SnakeSize, SnakeSize, SnakeSize);
+					SnakeBody.First.Value = new Point(SnakeBody.First.Value.X, SnakeBody.First.Value.Y - 1);
 					break;
 				case Direction.Down:
-					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y + SnakeSize, SnakeSize, SnakeSize);
+					SnakeBody.First.Value = new Point(SnakeBody.First.Value.X, SnakeBody.First.Value.Y + 1);
 					break;
 				case Direction.Left:
-					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X - SnakeSize, SnakeBody.First.Value.Y, SnakeSize, SnakeSize);
+					SnakeBody.First.Value = new Point(SnakeBody.First.Value.X - 1, SnakeBody.First.Value.Y);
 					break;
 				case Direction.Right:
-					SnakeBody.First.Value = new Rectangle(SnakeBody.First.Value.X + SnakeSize, SnakeBody.First.Value.Y, SnakeSize, SnakeSize);
+					SnakeBody.First.Value = new Point(SnakeBody.First.Value.X + 1, SnakeBody.First.Value.Y);
 					break;
 			}
 		}
@@ -117,7 +115,7 @@ namespace Snake
 
 		public void Grow(int points) // ;)
 		{
-			SnakeBody.AddLast(new Rectangle(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y, SnakeSize, SnakeSize));
+			SnakeBody.AddLast(new Point(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y));
 			AddPoints(points);
 		}
 

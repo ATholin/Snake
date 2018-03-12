@@ -11,9 +11,7 @@ namespace Snake
 {
     public class NormalFood : Food, ICollidable
     {
-		public NormalFood(Rectangle rect) : base(rect) { }
-
-		public NormalFood(int x, int y, int size) : base(x, y, size) { }
+		public NormalFood(int x, int y) : base(x, y) { }
 
 		public override void OnCollision(Snake snake)
 		{

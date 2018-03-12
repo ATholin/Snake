@@ -16,10 +16,13 @@ namespace Snake
 			Left = left;
 			Right = right;
 			Snake = snake;
-			direction = Direction.Right;
+			direction = Direction.Down;
 		}
 
+		//TODO: SNAKE DIR BUFFER
+
 		Snake Snake;
+		public int Counter { get { return Snake.counter; } set { Snake.counter = value; } }
 
 		public Keys Up;
 		public Keys Down;
@@ -34,10 +37,9 @@ namespace Snake
 
 		public void ChangeDir(Direction dir)
 		{
-			if (!IsOppositeDir(dir) && Snake.HasMoved)
+			if (!IsOppositeDir(dir))
 			{
 				direction = dir;
-				Snake.HasMoved = false;
 			}
 		}
 

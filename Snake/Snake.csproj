@@ -46,6 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FoodFactory.cs" />
+    <Compile Include="MainMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NormalFood.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Direction.cs" />

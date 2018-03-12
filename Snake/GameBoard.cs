@@ -12,12 +12,6 @@ namespace Snake
 {
     public class GameBoard : Panel
     {
-		int Dimension;
-
-		Snake snake = new Snake(60, 100, Color.Blue);
-		Snake snake2 = new Snake(60, 200, Color.Red);
-		Snake snake3 = new Snake(60, 300, Color.Green);
-
 		Dictionary<Keys, Player> players;
 
 		public ISet<Snake> Snakes = new HashSet<Snake>();
@@ -26,8 +20,6 @@ namespace Snake
 		public ISet<Food> FoodToRemove = new HashSet<Food>();
 
 		FoodFactory foodFactory;
-
-		int GridSize;
 
 		public Player[] Players { get
 			{
@@ -44,59 +36,78 @@ namespace Snake
 		public delegate void ScoreChangedHandler();
 		public event ScoreChangedHandler ScoreChanged;
 
-		public GameBoard(int dimension, int players)
+		public GameBoard(Size size, int players)
 		{
+			Height = 600;
+			Width = 600;
+			Size = size;
+
 			foodFactory = new FoodFactory(this);
-
-			GridSize = dimension;
-			Dock = DockStyle.Fill;
-
-			Add(snake);
-			Add(snake2);
-			Add(snake3);
+			foodFactory.InitFood();
 
 			this.players = new Dictionary<Keys, Player>(players);
 
-			var player = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
-			this.players.Add(Keys.Up, player);
-			this.players.Add(Keys.Down, player);
-			this.players.Add(Keys.Left, player);
-			this.players.Add(Keys.Right, player);
-
-			var player2 = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snake2);
-			this.players.Add(Keys.W, player2);
-			this.players.Add(Keys.S, player2);
-			this.players.Add(Keys.A, player2);
-			this.players.Add(Keys.D, player2);
-
-			var player3 = new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3);
-			this.players.Add(Keys.I, player3);
-			this.players.Add(Keys.K, player3);
-			this.players.Add(Keys.J, player3);
-			this.players.Add(Keys.L, player3);
-
-			//this.players[0] = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake);
-			//this.players[1] = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snakes[1]);
-
-			Dimension = dimension;
 			Paint += new PaintEventHandler(Draw);
+		}
+
+		public void AddPlayers(int p)
+		{
+
+			if (p >= 1)
+			{
+				var snake1 = new Snake(Settings.Size / 3, 2, Color.Blue);
+				var player = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake1);
+				players.Add(Keys.Up, player);
+				players.Add(Keys.Down, player);
+				players.Add(Keys.Left, player);
+				players.Add(Keys.Right, player);
+				Snakes.Add(snake1);
+			}
+			/*
+			if (p >= 2)
+			{
+				var snake2 = new Snake(Settings.Size / 2, 2, Color.Red);
+				var player2 = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snake2);
+				players.Add(Keys.W, player2);
+				players.Add(Keys.S, player2);
+				players.Add(Keys.A, player2);
+				players.Add(Keys.D, player2);
+				Snakes.Add(snake2);
+			}
+			if (p >= 3)
+			{
+				var snake3 = new Snake(Settings.Size / 1, 2, Color.Green);
+				players.Add(Keys.I, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
+				players.Add(Keys.K, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
+				players.Add(Keys.J, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
+				players.Add(Keys.L, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
+				Snakes.Add(snake3);
+			}
+			*/
 		}
 
 		public void Tick()
 		{
-			SpawnFood();
             int index = 0;
 			foreach (var p in players.Values)
 			{
 				if (index++ % 4 != 0)
 					continue;
-				p.MoveSnake();
+				if (p.Counter > 0)
+				{
+					p.MoveSnake();
+					p.Counter--;
+				}
+				else
+				{
+					p.Counter = 1;
+				}
+				
 			}
 
 			foreach(var snek in Snakes)
 			{
-				snek.HasMoved = true;
-				if (snek.SnakeHead.X > Width || snek.SnakeHead.X < 0 || snek.SnakeHead.Y > Height || snek.SnakeHead.Y < 0)
+				if (snek.SnakeHeadRect.X > (Settings.Size*2) - 1 || snek.SnakeHeadRect.X < 0 || snek.SnakeHeadRect.Y > (Settings.Size*2) - 1 || snek.SnakeHeadRect.Y < 0)
 				{
 					ToRemove.Add(snek);
 				}
@@ -117,7 +128,6 @@ namespace Snake
 					{
 						FoodToRemove.Add(food);
 						ScoreChanged?.Invoke();
-						SpawnFood();
 					}
 				}
 			}
@@ -127,26 +137,7 @@ namespace Snake
 
 		private void SpawnFood()
 		{
-			Random rand = new Random();
-
-			var foodRect = foodFactory.GetAvailableSpot();
-
-			int generate = rand.Next(0, 1001);
-
-			if (generate <= 50)
-            {
-				if (generate <= 25)
-				{
-					if (generate <= 10)
-					{
-						//Add random snake speed up
-					}
-					//Add Rare 5pts
-				}
-				//Add normal
-				Add(new NormalFood(foodRect));
-				return;
-			}
+			Add(foodFactory.SpawnFood());
 		}
 
 		private void Draw(object sender, PaintEventArgs e)
@@ -201,6 +192,7 @@ namespace Snake
 			foreach(var f in FoodToRemove)
 			{
 				Foods.Remove(f);
+				SpawnFood();
 			}
 
 			FoodToRemove.Clear();

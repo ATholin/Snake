@@ -12,21 +12,28 @@ namespace Snake
 	{
 		public ScorePanel(GameBoard game)
 		{
-			Width = game.Width-30;
+			Padding = new Padding(5);
+			Width = game.Width-15;
+			Height = 115;
+
+
 			this.game = game;
-			AddSnakes();
-			playercount = Snakes.Count;
+			playercount = game.Snakes.Count;
 			playerpanels = new PlayerPanel[playercount];
 
-			for (int i = 0; i < playerpanels.Length; i++)
+			int index = 0;
+			foreach (var snake in game.Snakes)
 			{
-				playerpanels[i] = new PlayerPanel("", Width / playerpanels.Length);
-
-				Controls.Add(playerpanels[i]);
+				Snakes.Add(snake);
+				playerpanels[index] = new PlayerPanel("", Width / playercount)
+				{
+					BackColor = snake.SnakeColor
+				};
+				Controls.Add(playerpanels[index]);
+				index++;
 			}
 
 			Dock = DockStyle.Bottom;
-			Height = 100;
 			Paint += ScoreLabel_Paint;
 		}
 
@@ -50,13 +57,5 @@ namespace Snake
 
 		GameBoard game;
 		ISet<Snake> Snakes = new HashSet<Snake>();
-
-		public void AddSnakes()
-		{
-			foreach(var s in game.Snakes)
-			{
-				Snakes.Add(s);
-			}
-		}
 	}
 }

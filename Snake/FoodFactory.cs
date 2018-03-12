@@ -9,23 +9,23 @@ namespace Snake
 {
 	class FoodFactory
 	{
-		GameBoard Game;
+		GameBoard game;
 		Random rand = new Random();
 		int[,] Occupied;
 
 		public FoodFactory(GameBoard game)
 		{
-			Game = game;
-			Occupied = new int[Game.Width / Settings.Size, Game.Height / Settings.Size];
+			this.game = game;
+			Occupied = new int[Settings.Size, Settings.Size];
 		}
 
 		public void Reset()
 		{
-			for(int x = 0; x < Game.Width/Settings.Size; x++)
+			for(int x = 0; x < Settings.Size; x++)
 			{
-				for (int y = 0; y< Game.Height/Settings.Size;y++)
+				for (int y = 0; y < Settings.Size; y++)
 				{
-					Occupied[x/Settings.Size, y/Settings.Size] = 0;
+					Occupied[x, y] = 0;
 				}
 			}
 		}
@@ -34,40 +34,65 @@ namespace Snake
 		{
 			Reset();
 
-			foreach(var snake in Game.Snakes)
+			foreach(var snake in game.Snakes)
 			{
 				foreach(var snakepart in snake.SnakeBody)
 				{
-					Occupied[snakepart.X / Settings.Size, snakepart.Y / Settings.Size] = 1;
+					Occupied[snakepart.X, snakepart.Y] = 1;
 				}
 			}
 
-			foreach(var food in Game.Foods)
+			foreach(var food in game.Foods)
 			{
-				Occupied[food.X / Settings.Size, food.Y / Settings.Size] = 1;
+				Occupied[food.X, food.Y] = 1;
 			}
 		}
 
-		public Rectangle GetAvailableSpot()
+		public Point GetAvailableSpot()
 		{
 			Update();
 
-			int randX = rand.Next(0, Game.Width / Settings.Size);
-			int randY = rand.Next(0, Game.Height / Settings.Size);
+			int randX = rand.Next(0, Settings.Size);
+			int randY = rand.Next(0, Settings.Size);
 
 			if (Occupied[randX, randY] == 0)
-				return new Rectangle(randX, randY, Settings.Size, Settings.Size);
+				return new Point(randX, randY);
 
 			while (Occupied[randX, randY] == 1)
 			{
-				randX += Settings.Size;
-				if (randX > Game.Width / Settings.Size)
+				randX += 1;
+				if (randX > game.Width)
 				{
 					randX = 0;
-					randY += Settings.Size;
+					randY += 1;
 				}
 			}
-			return new Rectangle(randX, randY, Settings.Size, Settings.Size);
+			return new Point(randX, randY);
+		}
+
+		public Food SpawnFood()
+		{
+			var generate = rand.Next(0, 100);
+
+			if (generate < 20)
+			{
+				if (generate< 5)
+				{
+					//return new SpeedFood();
+				}
+				//return new RareFood()
+			}
+			var foodpoint = GetAvailableSpot();
+			return new NormalFood(foodpoint.X, foodpoint.Y);
+		}
+
+		public void InitFood()
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				game.Add(SpawnFood());
+			}
+			
 		}
 	}
 }
