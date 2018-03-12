@@ -20,25 +20,14 @@ namespace Snake
 		{
 			InitializeComponent();
 
-			game = new GameBoard(Size, 3);
-			Controls.Add(game);
-
-			Width =1000;
-			Height = game.Height + 100;
-			game.Location = new Point((Width - game.Width) / 2, 0);
-
 			var menu = new MainMenu(Width, Height);
 			Controls.Add(menu);
 			menu.BringToFront();
 
 			menu.StartButtonClicked += Menu_StartButtonClicked;
 
-			Resize += SnakeGame_Resize;
-
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
-
-			game.ScoreChanged += Game_ScoreChanged;
 
 			DoubleBuffered = false;
 
@@ -49,40 +38,32 @@ namespace Snake
 
 		private void ResizeWindow()
 		{
-			game.Location = new Point((Width - game.Width) / 2, 0);
-			var smallest = Math.Min(game.Width, game.Height);
-			if (smallest > Math.Min(Width, Height))
-			{
-				game.Width -= Settings.Size;
-				game.Height -= Settings.Size;
-				Settings.Size -= 1;
-			}
-			else
-			{
-				game.Width += Settings.Size;
-				game.Height += Settings.Size;
-				Settings.Size += 1;
-			}
+			
+			var smallest = Math.Min(Width, Height - 150);
+			smallest -= smallest % Settings.Dimension;
+			game.Width = smallest;
+			game.Height = smallest;
+			Settings.Size = smallest / Settings.Dimension;
 			game.Refresh();
-		}
-
-		private void SnakeGame_Resize(object sender, EventArgs e)
-		{
-			ResizeWindow();
 		}
 
 		private void Menu_StartButtonClicked(int numplayers)
 		{
+			game = new GameBoard(3);
+			Controls.Add(game);
+			ResizeWindow();
 			Settings.NumPlayers = numplayers;
 			game.AddPlayers(numplayers);
-			scorepanel = new ScorePanel(game);
+			scorepanel = new ScorePanel(game, Width);
 			Controls.Add(scorepanel);
+			game.Location = new Point((Width - game.Width) / 2, 0);
+			game.ScoreChanged += Game_ScoreChanged;
 			timer.Start();
 		}
 
 		private void Game_ScoreChanged()
 		{
-			scorepanel.Refresh();
+			scorepanel.UpdatePanels();
 		}
 
 		private void TimerEventHandler(object sender, EventArgs e)

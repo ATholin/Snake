@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Snake
 {
@@ -16,14 +17,14 @@ namespace Snake
 		public FoodFactory(GameBoard game)
 		{
 			this.game = game;
-			Occupied = new int[Settings.Size, Settings.Size];
+			Occupied = new int[Settings.Dimension, Settings.Dimension];
 		}
 
 		public void Reset()
 		{
-			for(int x = 0; x < Settings.Size; x++)
+			for(int x = 0; x < Settings.Dimension; x++)
 			{
-				for (int y = 0; y < Settings.Size; y++)
+				for (int y = 0; y < Settings.Dimension; y++)
 				{
 					Occupied[x, y] = 0;
 				}
@@ -52,8 +53,8 @@ namespace Snake
 		{
 			Update();
 
-			int randX = rand.Next(0, Settings.Size);
-			int randY = rand.Next(0, Settings.Size);
+			int randX = rand.Next(0, Settings.Dimension);
+			int randY = rand.Next(0, Settings.Dimension);
 
 			if (Occupied[randX, randY] == 0)
 				return new Point(randX, randY);
@@ -73,6 +74,7 @@ namespace Snake
 		public Food SpawnFood()
 		{
 			var generate = rand.Next(0, 100);
+			var foodpoint = GetAvailableSpot();
 
 			if (generate < 20)
 			{
@@ -80,9 +82,8 @@ namespace Snake
 				{
 					//return new SpeedFood();
 				}
-				//return new RareFood()
+				return new RareFood(foodpoint.X, foodpoint.Y);
 			}
-			var foodpoint = GetAvailableSpot();
 			return new NormalFood(foodpoint.X, foodpoint.Y);
 		}
 

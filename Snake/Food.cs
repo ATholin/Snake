@@ -14,10 +14,9 @@ namespace Snake
 		{
 			X = x;
 			Y = y;
-			brush = new SolidBrush(Color.Yellow);
 		}
 
-		SolidBrush brush;
+		public SolidBrush brush;
 		public int X { get; private set; }
 		public int Y { get; private set; }
 		public Point Piece { get { return new Point(X, Y); } }
@@ -37,7 +36,7 @@ namespace Snake
 
 		public bool Intersects(Snake snake)
 		{
-			if (snake.SnakeBody.First.Equals(Piece))
+			if (snake.SnakeBody.First.Value == Piece)
 			{
 				OnCollision(snake);
 				return true;

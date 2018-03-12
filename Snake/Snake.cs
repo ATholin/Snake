@@ -54,7 +54,7 @@ namespace Snake
 
 				while(node != null)
 				{
-					if (SnakeBody.First.Equals(node.Value))
+					if (SnakeBody.First.Value.Equals(node.Value))
 					{
 						return true;
 					}
@@ -67,7 +67,7 @@ namespace Snake
 
 				while (node != null)
 				{
-					if (SnakeBody.First.Equals(node.Value))
+					if (SnakeBody.First.Value.Equals(node.Value))
 					{
 						enemysnek.OnCollision(this);
 						return true;
@@ -115,6 +115,13 @@ namespace Snake
 
 		public void Grow(int points) // ;)
 		{
+			SnakeBody.AddLast(new Point(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y));
+			AddPoints(points);
+		}
+
+		public void DoubleGrow(int points) // ;)
+		{
+			SnakeBody.AddLast(new Point(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y));
 			SnakeBody.AddLast(new Point(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y));
 			AddPoints(points);
 		}

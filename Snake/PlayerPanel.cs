@@ -22,12 +22,14 @@ namespace Snake
 			ForeColor = Color.Black;
 			Font = new Font("Arial", 20);
 
-			Width = width;
+			Margin = Padding.Empty;
+
+			Width = width-5;
 			Controls.Add(label);
 		}
 
 		public void SetText(string s) => label.Text = s;
 
-		Label label;
+		public Label label;
 	}
 }

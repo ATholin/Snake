@@ -10,11 +10,13 @@ namespace Snake
 {
 	class ScorePanel : FlowLayoutPanel
 	{
-		public ScorePanel(GameBoard game)
+		public ScorePanel(GameBoard game, int width)
 		{
-			Padding = new Padding(5);
-			Width = game.Width-15;
-			Height = 115;
+			Width = width;
+			BorderStyle = BorderStyle.None;
+			Margin = Padding.Empty;
+			Padding = Padding.Empty;
+			Height = 100;
 
 
 			this.game = game;
@@ -33,19 +35,19 @@ namespace Snake
 				index++;
 			}
 
+			UpdatePanels();
 			Dock = DockStyle.Bottom;
-			Paint += ScoreLabel_Paint;
 		}
 
-		private void ScoreLabel_Paint(object sender, PaintEventArgs e)
+		public void UpdatePanels()
 		{
-
 			int index = 1;
-			foreach(var s in Snakes)
+			foreach (var s in Snakes)
 			{
 				var pointstring = $"Player {index}: {s.points}";
 				playerpanels[index - 1].SetText(pointstring);
 				index++;
+
 				//e.Graphics.DrawString(s, font, brush, new Point((Width / playercount+index), (Height - font.Height) / 2));
 			}
 		}

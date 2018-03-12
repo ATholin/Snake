@@ -36,12 +36,8 @@ namespace Snake
 		public delegate void ScoreChangedHandler();
 		public event ScoreChangedHandler ScoreChanged;
 
-		public GameBoard(Size size, int players)
+		public GameBoard(int players)
 		{
-			Height = 600;
-			Width = 600;
-			Size = size;
-
 			foodFactory = new FoodFactory(this);
 			foodFactory.InitFood();
 
@@ -55,7 +51,7 @@ namespace Snake
 
 			if (p >= 1)
 			{
-				var snake1 = new Snake(Settings.Size / 3, 2, Color.Blue);
+				var snake1 = new Snake(Settings.Dimension / (p+1) * 1, 2, Color.Blue);
 				var player = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake1);
 				players.Add(Keys.Up, player);
 				players.Add(Keys.Down, player);
@@ -63,10 +59,9 @@ namespace Snake
 				players.Add(Keys.Right, player);
 				Snakes.Add(snake1);
 			}
-			/*
 			if (p >= 2)
 			{
-				var snake2 = new Snake(Settings.Size / 2, 2, Color.Red);
+				var snake2 = new Snake(Settings.Dimension / (p+1) * 2, 2, Color.Red);
 				var player2 = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snake2);
 				players.Add(Keys.W, player2);
 				players.Add(Keys.S, player2);
@@ -76,14 +71,13 @@ namespace Snake
 			}
 			if (p >= 3)
 			{
-				var snake3 = new Snake(Settings.Size / 1, 2, Color.Green);
+				var snake3 = new Snake(Settings.Dimension / (p+1) * 3, 2, Color.Green);
 				players.Add(Keys.I, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
 				players.Add(Keys.K, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
 				players.Add(Keys.J, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
 				players.Add(Keys.L, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
 				Snakes.Add(snake3);
 			}
-			*/
 		}
 
 		public void Tick()
@@ -107,7 +101,7 @@ namespace Snake
 
 			foreach(var snek in Snakes)
 			{
-				if (snek.SnakeHeadRect.X > (Settings.Size*2) - 1 || snek.SnakeHeadRect.X < 0 || snek.SnakeHeadRect.Y > (Settings.Size*2) - 1 || snek.SnakeHeadRect.Y < 0)
+				if (snek.SnakeBody.First.Value.X > Settings.Dimension || snek.SnakeBody.First.Value.X < 0 || snek.SnakeBody.First.Value.Y > Settings.Dimension || snek.SnakeBody.First.Value.Y < 0)
 				{
 					ToRemove.Add(snek);
 				}
@@ -127,7 +121,7 @@ namespace Snake
 					if (food.Intersects(snek))
 					{
 						FoodToRemove.Add(food);
-						ScoreChanged?.Invoke();
+						ScoreChanged.Invoke();
 					}
 				}
 			}
@@ -138,6 +132,7 @@ namespace Snake
 		private void SpawnFood()
 		{
 			Add(foodFactory.SpawnFood());
+
 		}
 
 		private void Draw(object sender, PaintEventArgs e)
@@ -193,6 +188,7 @@ namespace Snake
 			{
 				Foods.Remove(f);
 				SpawnFood();
+
 			}
 
 			FoodToRemove.Clear();

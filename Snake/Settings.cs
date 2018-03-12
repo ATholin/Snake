@@ -13,7 +13,8 @@ namespace Snake
 		// GAME SETTINGS
 		public static int NumPlayers = 1;
 		public static int MaxPlayers = 3;
-		public static int Size = 20;
+		public static int Dimension = 40;
+		public static int Size;
 		public static int FPS = 30;
 
 		public struct PlayerInfo

@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Snake.Interface;
-using System.Windows.Forms;
+using System.Drawing;
 
 namespace Snake
 {
-    public class NormalFood : Food, ICollidable
-    {
-		public NormalFood(int x, int y) : base(x, y)
+	class RareFood : Food, ICollidable
+	{
+		public RareFood(int x, int y) : base(x, y)
 		{
-			brush = new SolidBrush(Color.White);
+			brush = new SolidBrush(Color.Yellow);
 		}
 
 		public override void OnCollision(Snake snake)
 		{
-			snake.Grow(1);
+			snake.DoubleGrow(5);
 		}
 	}
 }
