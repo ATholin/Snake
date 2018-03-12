@@ -80,7 +80,7 @@ namespace Snake
 			{
 				if (generate< 5)
 				{
-					//return new SpeedFood();
+					return new SpeedFood(game, foodpoint.X, foodpoint.Y);
 				}
 				return new RareFood(foodpoint.X, foodpoint.Y);
 			}

@@ -126,6 +126,11 @@ namespace Snake
 			AddPoints(points);
 		}
 
+		public void SpeedUp()
+		{
+			counter = (1000 / Settings.FPS) * 10;
+		}
+
 		public void AddPoints(int points)
 		{
 			score.UpdateScore(points);
