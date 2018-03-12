@@ -25,6 +25,8 @@ namespace Snake
 		public ISet<Food> Foods = new HashSet<Food>();
 		public ISet<Food> FoodToRemove = new HashSet<Food>();
 
+		FoodFactory foodFactory;
+
 		int GridSize;
 
 		public Player[] Players { get
@@ -44,6 +46,8 @@ namespace Snake
 
 		public GameBoard(int dimension, int players)
 		{
+			foodFactory = new FoodFactory(this);
+
 			GridSize = dimension;
 			Dock = DockStyle.Fill;
 
@@ -113,6 +117,7 @@ namespace Snake
 					{
 						FoodToRemove.Add(food);
 						ScoreChanged?.Invoke();
+						SpawnFood();
 					}
 				}
 			}
@@ -124,12 +129,7 @@ namespace Snake
 		{
 			Random rand = new Random();
 
-			var foodRect = new Rectangle((int)(Math.Ceiling(rand.Next(0, Width) / 20.0d) * 20), (int)(Math.Ceiling(rand.Next(0, Height) / 20.0d) * 20), GridSize, GridSize);
-
-			while (!CheckEmptySpot(foodRect))
-			{
-				foodRect = new Rectangle((int)(Math.Ceiling(rand.Next(0, Width) / 20.0d) * 20), (int)(Math.Ceiling(rand.Next(0, Height) / 20.0d) * 20), GridSize, GridSize);
-			}
+			var foodRect = foodFactory.GetAvailableSpot();
 
 			int generate = rand.Next(0, 1001);
 
@@ -147,29 +147,6 @@ namespace Snake
 				Add(new NormalFood(foodRect));
 				return;
 			}
-		}
-
-		private bool CheckEmptySpot(Rectangle foodRect)
-		{
-			foreach (var snake in Snakes)
-			{
-				foreach (var snakepart in snake.Snakebody)
-				{
-					while (snakepart.IntersectsWith(foodRect))
-					{
-						return false;
-					}
-				}
-			}
-
-			foreach (var food in Foods)
-			{
-				if (food.Piece.IntersectsWith(foodRect))
-				{
-					return false;
-				}
-			}
-			return true;
 		}
 
 		private void Draw(object sender, PaintEventArgs e)

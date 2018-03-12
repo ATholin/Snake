@@ -32,18 +32,10 @@ namespace Snake
 		public int points { get { return score.score; } }
 
 		public bool HasMoved;
-		LinkedList<Rectangle> SnakeBody;
+		public LinkedList<Rectangle> SnakeBody { get; private set; }
 		SolidBrush brush;
 
 		public Color SnakeColor { get { return brush.Color; } }
-		public Rectangle[] Snakebody { get
-			{
-				Rectangle[] badabing = new Rectangle[SnakeBody.Count];
-				SnakeBody.CopyTo(badabing, 0);
-				var badaboom = badabing;
-				return badaboom;
-			}
-		}
 
 		public Rectangle SnakeHead { get { return SnakeBody.First.Value; } }
 		int SnakeSize;
