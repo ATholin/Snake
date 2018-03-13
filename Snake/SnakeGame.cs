@@ -133,8 +133,9 @@ namespace Snake
 			timelabel = new Label
 			{
 				Text = "3",
-				Padding = new Padding(5),
-				AutoSize = true,
+				Width = 100,
+				Height = 100,
+				TextAlign = System.Drawing.ContentAlignment.TopCenter,
 				ForeColor = Color.Black,
 				Font = new Font(SnakeGame.font.Families[0], 52),
 			};
@@ -196,76 +197,80 @@ namespace Snake
 			winnerlabel.ForeColor = Color.Black;
 			winnerlabel.Font = new Font(SnakeGame.font.Families[0], 42);
 
-
-			var restartbtn = new SnekButton
+			var restartinfo = new Label
 			{
-				Text = "Restart",
-				Location = new Point(winnerlabel.Location.X, winnerlabel.Location.Y + winnerlabel.Height * 6),
-				BackColor = Color.White,
+				Text = "Press Escape to restart",
+				Location = new Point(winnerlabel.Location.X, winnerlabel.Location.Y + winnerlabel.Height*6),
+				ForeColor = Color.White,
+				BackColor = Color.Black,
 				AutoSize = true,
-				Font = new Font(SnakeGame.font.Families[0], 32),
-				Width = 200,
-				Height = 50
-			};		
+				Font = new Font(SnakeGame.font.Families[0], 16),
+			};
 
-			restartbtn.Click += Restart_Game;
-
-			Controls.Add(restartbtn);
 			Controls.Add(winnerlabel);
-			restartbtn.BringToFront();
+			Controls.Add(restartinfo);
 			winnerlabel.BringToFront();
-		}
-
-		private void Restart_Game(object sender, EventArgs e)
-		{
-			Application.Restart();
+			restartinfo.BringToFront();
 		}
 
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			switch (e.KeyCode)
+			if (!menu.Visible)
 			{
-				//PLAYER ONE
-				case Keys.Up:
-					game.ChangeDirection(Direction.Up, 0);
-					break;
-				case Keys.Down:
-					game.ChangeDirection(Direction.Down, 0);
-					break;
-				case Keys.Left:
-					game.ChangeDirection(Direction.Left, 0);
-					break;
-				case Keys.Right:
-					game.ChangeDirection(Direction.Right, 0);
-					break;
+				switch (e.KeyCode)
+				{
+					//PLAYER ONE
+					case Keys.Up:
+						game.ChangeDirection(Direction.Up, 0);
+						break;
+					case Keys.Down:
+						game.ChangeDirection(Direction.Down, 0);
+						break;
+					case Keys.Left:
+						game.ChangeDirection(Direction.Left, 0);
+						break;
+					case Keys.Right:
+						game.ChangeDirection(Direction.Right, 0);
+						break;
 
-				//PLAYER TWO
-				case Keys.W:
-					game.ChangeDirection(Direction.Up, 1);
-					break;
-				case Keys.S:
-					game.ChangeDirection(Direction.Down, 1);
-					break;
-				case Keys.A:
-					game.ChangeDirection(Direction.Left, 1);
-					break;
-				case Keys.D:
-					game.ChangeDirection(Direction.Right, 1);
-					break;
+					//PLAYER TWO
+					case Keys.W:
+						game.ChangeDirection(Direction.Up, 1);
+						break;
+					case Keys.S:
+						game.ChangeDirection(Direction.Down, 1);
+						break;
+					case Keys.A:
+						game.ChangeDirection(Direction.Left, 1);
+						break;
+					case Keys.D:
+						game.ChangeDirection(Direction.Right, 1);
+						break;
 
-				//PLAYER THREE
-				case Keys.I:
-					game.ChangeDirection(Direction.Up, 2);
-					break;
-				case Keys.K:
-					game.ChangeDirection(Direction.Down, 2);
-					break;
-				case Keys.J:
-					game.ChangeDirection(Direction.Left, 2);
-					break;
-				case Keys.L:
-					game.ChangeDirection(Direction.Right, 2);
-					break;
+					//PLAYER THREE
+					case Keys.I:
+						game.ChangeDirection(Direction.Up, 2);
+						break;
+					case Keys.K:
+						game.ChangeDirection(Direction.Down, 2);
+						break;
+					case Keys.J:
+						game.ChangeDirection(Direction.Left, 2);
+						break;
+					case Keys.L:
+						game.ChangeDirection(Direction.Right, 2);
+						break;
+
+					case Keys.Escape:
+						Application.Restart();
+						break;
+					case Keys.Enter:
+						if (timer.Enabled)
+						{
+							Application.Restart();
+						}
+						break;
+				}
 			}
 		}
 	}

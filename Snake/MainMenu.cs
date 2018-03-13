@@ -14,6 +14,7 @@ namespace Snake
 		FlowLayoutPanel flow;
 		Label numplayerslabel;
 		Label snakelabel;
+		Label infolabel;
 		SnekButton startbtn;
 		SnekButton quitbtn;
 		SnekButton addPlayer;
@@ -28,7 +29,7 @@ namespace Snake
 			Height = height;
 			BackColor = Color.Black;
 			Dock = DockStyle.Fill;
-			Font = new Font(SnakeGame.font.Families[0], 20);
+			Font = new Font(SnakeGame.font.Families[0], 16);
 
 			Initialize();
 
@@ -38,14 +39,38 @@ namespace Snake
 			startbtn.Click += Startbtn_Click;
 			quitbtn.Click += Quitbtn_Click;
 			Resize += MainMenu_Resize;
+
+			PreviewKeyDown += MainMenu_PreviewKeyDown; ;
+		}
+
+		private void MainMenu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			switch (e.KeyCode)
+			{
+				case Keys.Left:
+					ChangePlayer_Click(delPlayer, EventArgs.Empty);
+					break;
+				case Keys.Right:
+					ChangePlayer_Click(addPlayer, EventArgs.Empty);
+					break;
+				case Keys.Escape:
+					Application.Exit();
+					break;
+				case Keys.Enter:
+					Startbtn_Click(null, EventArgs.Empty);
+					break;
+			}
 		}
 
 		private void Initialize()
 		{
+			var NinePlusTen = 21;
+			var lfont = new Font(SnakeGame.font.Families[0], NinePlusTen);
+
 			snakelabel = new Label
 			{
-				Font = new Font(SnakeGame.font.Families[0], 36),
-				Text = "sneaky snek\nsupreme 3.5",
+				Font = lfont,
+				Text = "SUPREME SNAKE",
 				Margin = Padding.Empty,
 				Height = 100,
 				BackColor = Color.Red,
@@ -56,6 +81,7 @@ namespace Snake
 
 			startbtn = new SnekButton
 			{
+				Font = lfont,
 				Text = "Start",
 				Width = Width - 300,
 				Height = 100,
@@ -63,7 +89,7 @@ namespace Snake
 
 			quitbtn = new SnekButton
 			{
-				
+				Font = lfont,
 				Text = "Quit",
 				Width = Width - 300,
 				Height = 100
@@ -71,6 +97,7 @@ namespace Snake
 
 			flow = new FlowLayoutPanel
 			{
+				Font = lfont,
 				BackColor = Color.Transparent,
 				Padding = Padding.Empty,
 				Margin = Padding.Empty,
@@ -108,6 +135,19 @@ namespace Snake
 				Text = numplayers.ToString()
 			};
 
+			infolabel = new Label
+			{
+				BackColor = Color.Black,
+				Margin = Padding.Empty,
+				Height = flow.Height,
+				ForeColor = Color.White,
+				Width = flow.Width,
+				TextAlign = ContentAlignment.MiddleCenter,
+				Text =	"<  > : add/remove players\n" +
+						"Enter: Start game\n" +
+						"Escape : quit"
+			};
+
 			flow.Controls.Add(delPlayer);
 			flow.Controls.Add(numplayerslabel);
 			flow.Controls.Add(addPlayer);
@@ -116,11 +156,13 @@ namespace Snake
 			startbtn.Location = new Point((Width - startbtn.Width) / 2, snakelabel.Location.Y + snakelabel.Height + 50);
 			flow.Location = new Point((Width - flow.Width) / 2, startbtn.Location.Y + startbtn.Height + 10);
 			quitbtn.Location = new Point((Width - startbtn.Width) / 2, flow.Location.Y + flow.Height + 10);
+			infolabel.Location = new Point((Width - infolabel.Width) / 2, quitbtn.Location.Y + quitbtn.Height + 30);
 
 			Controls.Add(snakelabel);
 			Controls.Add(flow);
 			Controls.Add(quitbtn);
 			Controls.Add(startbtn);
+			Controls.Add(infolabel);
 		}
 
 		private void Quitbtn_Click(object sender, EventArgs e)

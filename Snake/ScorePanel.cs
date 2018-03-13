@@ -27,7 +27,7 @@ namespace Snake
 			foreach (var snake in game.Snakes)
 			{
 				Snakes.Add(snake);
-				playerpanels[index] = new PlayerPanel("", (Width / playercount)-10 + playercount)
+				playerpanels[index] = new PlayerPanel("", (Width/playercount)-playercount*playercount)
 				{
 					BackColor = snake.SnakeColor
 				};
