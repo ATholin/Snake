@@ -26,6 +26,9 @@ namespace Snake
 		public delegate void ScoreChangedHandler();
 		public event ScoreChangedHandler ScoreChanged;
 
+		public delegate void BoardFullHandler();
+		public event BoardFullHandler BoardFull;
+
 		public GameBoard()
 		{
 			foodFactory = new FoodFactory(this);
@@ -108,7 +111,7 @@ namespace Snake
 					if (food.Intersects(snek))
 					{
 						FoodToRemove.Add(food);
-						ScoreChanged.Invoke();
+						ScoreChanged?.Invoke();
 					}
 				}
 			}
@@ -118,7 +121,10 @@ namespace Snake
 
 		private void SpawnFood()
 		{
-			Add(foodFactory.SpawnFood());
+			var food = foodFactory.SpawnFood();
+			if (food.X == -1 && food.Y == -1)
+				BoardFull?.Invoke();
+			Add(food);
 
 		}
 

@@ -51,6 +51,11 @@ namespace Snake
 			timer.Interval = 1000/Settings.FPS;
 		}
 
+		private void Game_BoardFull()
+		{
+			GameOver();
+		}
+
 		private void SnakeGame_Paint(object sender, PaintEventArgs e)
 		{
 			Image newImage = Properties.Resources.bg;
@@ -95,6 +100,7 @@ namespace Snake
 			game.Margin = Padding.Empty;
 	
 			game.ScoreChanged += Game_ScoreChanged;
+			game.BoardFull += Game_BoardFull;
 
 			countdowntimer = new Timer
 			{

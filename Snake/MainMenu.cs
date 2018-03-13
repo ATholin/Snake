@@ -163,7 +163,7 @@ namespace Snake
 		private void Startbtn_Click(object sender, EventArgs e)
 		{
 			Visible = false;
-			StartButtonClicked.Invoke(numplayers);
+			StartButtonClicked?.Invoke(numplayers);
 		}
 
 		public delegate void StartButtonClick(int numplayers);
