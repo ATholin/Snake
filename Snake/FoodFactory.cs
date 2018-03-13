@@ -62,7 +62,7 @@ namespace Snake
 			while (Occupied[randX, randY] == 1)
 			{
 				randX += 1;
-				if (randX > game.Width)
+				if (randX > Settings.Dimension)
 				{
 					randX = 0;
 					randY += 1;
