@@ -15,6 +15,9 @@ namespace Snake
 	{
 		public static PrivateFontCollection font = new PrivateFontCollection();
 		Timer timer;
+		int time;
+		Label timelabel;
+		Timer countdowntimer;
 		ScorePanel scorepanel;
 		GameBoard game;
 
@@ -62,7 +65,43 @@ namespace Snake
 			Controls.Add(scorepanel);
 			game.Location = new Point((Width - game.Width) / 2, 0);
 			game.ScoreChanged += Game_ScoreChanged;
-			timer.Start();
+			countdowntimer = new Timer();
+			countdowntimer.Interval = 1000;
+			countdowntimer.Tick += Countdowntimer_Tick;
+			time = 3;
+			game.Refresh();
+			Countdown();
+		}
+
+		private void Countdowntimer_Tick(object sender, EventArgs e)
+		{
+			if (time > 0)
+			{
+				time--;
+				timelabel.Text = time.ToString();
+				Refresh();
+			} else
+			{
+				countdowntimer.Stop();
+				timelabel.Visible = false;
+				timer.Start();
+			}
+		}
+
+		private void Countdown()
+		{
+			timelabel = new Label
+			{
+				Text = "3",
+			};
+			timelabel.Location = new Point((game.Width - timelabel.Width) / 2, (game.Width - timelabel.Width) / 2);
+			timelabel.Padding = new Padding(5);
+			timelabel.AutoSize = true;
+			timelabel.ForeColor = Color.Black;
+			timelabel.Font = new Font(SnakeGame.font.Families[0], 24);
+			Controls.Add(timelabel);
+			timelabel.BringToFront();
+			countdowntimer.Start();
 		}
 
 		private void Game_ScoreChanged()
