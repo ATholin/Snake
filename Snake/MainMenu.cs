@@ -21,37 +21,74 @@ namespace Snake
 
 		public MainMenu(int width, int height) : base()
 		{
+			Width = width;
+			Height = height;
 			BackColor = Color.Black;
 			Dock = DockStyle.Fill;
 			Font = new Font(SnakeGame.font.Families[0], 20);
 
+			Initialize();
+
+			delPlayer.Click += ChangePlayer_Click;
+			addPlayer.Click += ChangePlayer_Click;
+
+			startbtn.Click += Startbtn_Click;
+			quitbtn.Click += Quitbtn_Click;
+			Resize += MainMenu_Resize;
+
+			Paint += MainMenu_Paint;
+		}
+
+		private void MainMenu_Paint(object sender, PaintEventArgs e)
+		{
+			// Create image.
+			Image newImage = Image.FromFile(@"../../bg.jpg");
+			// Create coordinates for upper-left corner of image.
+			int x = 0;
+			int y = 0;
+
+			// Create rectangle for source image.
+			Rectangle srcRect = new Rectangle(0, 0, Width, 10000);
+			GraphicsUnit units = GraphicsUnit.Pixel;
+
+			// Draw image to screen.
+			e.Graphics.DrawImage(newImage, x, y, srcRect, units);
+		}
+
+		private void Initialize()
+		{
 			snakelabel = new Label
 			{
 				Font = new Font(SnakeGame.font.Families[0], 36),
-				Text = "SNAKE",
+				Text = "sneaky snek\nsupreme 3.5",
 				Margin = Padding.Empty,
 				Height = 100,
+				BackColor = Color.Red,
 				ForeColor = Color.White,
-				Width = width - 300,
+				Width = Width - 300,
 				TextAlign = ContentAlignment.MiddleCenter
 			};
 
 			startbtn = new SnekButton
 			{
 				Text = "Start",
-				Width = width - 300,
-				Height = 100
+				Width = Width - 300,
+				Height = 100,
 			};
 
 			quitbtn = new SnekButton
 			{
+				
 				Text = "Quit",
-				Width = width - 300,
+				Width = Width - 300,
 				Height = 100
 			};
 
 			flow = new FlowLayoutPanel
 			{
+				BackColor = Color.Transparent,
+				Padding = Padding.Empty,
+				Margin = Padding.Empty,
 				FlowDirection = FlowDirection.LeftToRight,
 				AutoSizeMode = AutoSizeMode.GrowAndShrink,
 				Width = 500
@@ -77,6 +114,7 @@ namespace Snake
 
 			players = new Label
 			{
+				BackColor = Color.Black,
 				Margin = Padding.Empty,
 				Height = flow.Height,
 				ForeColor = Color.White,
@@ -89,22 +127,15 @@ namespace Snake
 			flow.Controls.Add(players);
 			flow.Controls.Add(addPlayer);
 
-			snakelabel.Location = new Point((width - snakelabel.Width) / 2, 100);
-			startbtn.Location = new Point((width-startbtn.Width) / 2, snakelabel.Location.Y + snakelabel.Height + 50);
-			flow.Location = new Point((width - flow.Width) / 2, startbtn.Location.Y + startbtn.Height + 10);
-			quitbtn.Location = new Point((width - startbtn.Width) / 2, flow.Location.Y + flow.Height + 10);
+			snakelabel.Location = new Point((Width - snakelabel.Width) / 2, 100);
+			startbtn.Location = new Point((Width - startbtn.Width) / 2, snakelabel.Location.Y + snakelabel.Height + 50);
+			flow.Location = new Point((Width - flow.Width) / 2, startbtn.Location.Y + startbtn.Height + 10);
+			quitbtn.Location = new Point((Width - startbtn.Width) / 2, flow.Location.Y + flow.Height + 10);
 
 			Controls.Add(snakelabel);
 			Controls.Add(flow);
 			Controls.Add(quitbtn);
 			Controls.Add(startbtn);
-
-			delPlayer.Click += ChangePlayer_Click;
-			addPlayer.Click += ChangePlayer_Click;
-
-			startbtn.Click += Startbtn_Click;
-			quitbtn.Click += Quitbtn_Click;
-			Resize += MainMenu_Resize;
 		}
 
 		private void Quitbtn_Click(object sender, EventArgs e)

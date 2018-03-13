@@ -25,6 +25,8 @@ namespace Snake
 		{
 			InitializeComponent();
 
+			Paint += SnakeGame_Paint;
+
 			font.AddFontFile(@"../../font.ttf");
 
 			var menu = new MainMenu(Width, Height);
@@ -36,11 +38,16 @@ namespace Snake
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
 
-			DoubleBuffered = false;
+			DoubleBuffered = true;
 
 			timer = new Timer();
 			timer.Tick += new EventHandler(TimerEventHandler);
 			timer.Interval = 1000/Settings.FPS;
+		}
+
+		private void SnakeGame_Paint(object sender, PaintEventArgs e)
+		{
+			
 		}
 
 		private void ResizeWindow()
@@ -59,23 +66,31 @@ namespace Snake
 			game = new GameBoard(3);
 			Controls.Add(game);
 			ResizeWindow();
+
 			Settings.NumPlayers = numplayers;
 			game.AddPlayers(numplayers);
+
 			scorepanel = new ScorePanel(game, Width);
 			Controls.Add(scorepanel);
+
 			game.Location = new Point((Width - game.Width) / 2, 0);
+			game.Padding = Padding.Empty;
+			game.Margin = Padding.Empty;
+	
 			game.ScoreChanged += Game_ScoreChanged;
+
 			countdowntimer = new Timer();
 			countdowntimer.Interval = 1000;
 			countdowntimer.Tick += Countdowntimer_Tick;
 			time = 3;
 			game.Refresh();
 			Countdown();
+			timelabel.Location = new Point((Width-timelabel.Width)/2, (game.Height - timelabel.Height) / 2);
 		}
 
 		private void Countdowntimer_Tick(object sender, EventArgs e)
 		{
-			if (time > 0)
+			if (time > 1)
 			{
 				time--;
 				timelabel.Text = time.ToString();
@@ -94,11 +109,10 @@ namespace Snake
 			{
 				Text = "3",
 			};
-			timelabel.Location = new Point((game.Width - timelabel.Width) / 2, (game.Width - timelabel.Width) / 2);
 			timelabel.Padding = new Padding(5);
 			timelabel.AutoSize = true;
 			timelabel.ForeColor = Color.Black;
-			timelabel.Font = new Font(SnakeGame.font.Families[0], 24);
+			timelabel.Font = new Font(SnakeGame.font.Families[0], 52);
 			Controls.Add(timelabel);
 			timelabel.BringToFront();
 			countdowntimer.Start();
@@ -130,19 +144,23 @@ namespace Snake
 		private void ShowWinner()
 		{
 			Player winner = game.Players[0];
+			var players = game.Players;
 			int highest = -1;
 			int index = 0;
 			int windex = 0;
 
-			foreach(var player in game.Players)
+			for(int i = 0; i < players.Length; i += 4)
 			{
 				index++;
-				if (player.Score > highest)
+				if (players[i].Score > highest)
 				{
-					highest = player.Score;
-					winner = player;
+					highest = players[i].Score;
+					winner = players[i];
 					windex = index;
 				}
+
+				
+				
 			}
 
 			var winnerlabel = new Label
@@ -165,7 +183,7 @@ namespace Snake
 				Font = new Font(SnakeGame.font.Families[0], 32),
 				Width = 200,
 				Height = 50
-			};
+			};		
 
 			restartbtn.Click += Restart_Game;
 

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Snake
 {
-	public class Player
+	public class Player: IComparable
 	{
 		public Player(Keys up, Keys down, Keys left, Keys right, Snake snake)
 		{
@@ -24,6 +25,7 @@ namespace Snake
 		Snake Snake;
 		public int Counter { get { return Snake.counter; } set { Snake.counter = value; } }
 		public int Score { get { return Snake.points; } }
+		public Color Color { get { return Snake.SnakeColor; } }
 
 		public Keys Up;
 		public Keys Down;
@@ -66,6 +68,17 @@ namespace Snake
 				return true;
 			}
 			return false;
+		}
+
+		public int CompareTo(object obj)
+		{
+			if (obj == null) return 1;
+
+			Player otherTemperature = obj as Player;
+			if (otherTemperature != null)
+				return this.Score.CompareTo(otherTemperature.Score);
+			else
+				throw new ArgumentException("Object is not a Player");
 		}
 	}
 }

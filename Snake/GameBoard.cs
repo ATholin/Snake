@@ -72,10 +72,11 @@ namespace Snake
 			if (p >= 3)
 			{
 				var snake3 = new Snake(Settings.Dimension / (p+1) * 3, 2, Color.Green);
-				players.Add(Keys.I, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
-				players.Add(Keys.K, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
-				players.Add(Keys.J, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
-				players.Add(Keys.L, new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3));
+				var player3 = new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3);
+				players.Add(Keys.I, player3);
+				players.Add(Keys.K, player3);
+				players.Add(Keys.J, player3);
+				players.Add(Keys.L, player3);
 				Snakes.Add(snake3);
 			}
 		}
