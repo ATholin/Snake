@@ -13,20 +13,41 @@ namespace Snake
 		int numplayers = 1;
 		FlowLayoutPanel flow;
 		Label players;
+		Label snakelabel;
+		SnekButton startbtn;
+		SnekButton quitbtn;
+		SnekButton addPlayer;
+		SnekButton delPlayer;
 
 		public MainMenu(int width, int height) : base()
 		{
+			BackColor = Color.Black;
 			Dock = DockStyle.Fill;
+			Font = new Font(SnakeGame.font.Families[0], 20);
 
-			var startbtn = new Button
+			snakelabel = new Label
 			{
-				Text = "Start"
+				Font = new Font(SnakeGame.font.Families[0], 36),
+				Text = "SNAKE",
+				Margin = Padding.Empty,
+				Height = 100,
+				ForeColor = Color.White,
+				Width = width - 300,
+				TextAlign = ContentAlignment.MiddleCenter
 			};
 
-			var quitbtn = new Button
+			startbtn = new SnekButton
+			{
+				Text = "Start",
+				Width = width - 300,
+				Height = 100
+			};
+
+			quitbtn = new SnekButton
 			{
 				Text = "Quit",
-				Location = new Point(100, 100)
+				Width = width - 300,
+				Height = 100
 			};
 
 			flow = new FlowLayoutPanel
@@ -36,7 +57,7 @@ namespace Snake
 				Width = 500
 			};
 
-			var addPlayer = new Button
+			addPlayer = new SnekButton
 			{
 				Margin = Padding.Empty,
 				Height = flow.Height,
@@ -45,7 +66,7 @@ namespace Snake
 				Tag = "add"
 			};
 
-			var delPlayer = new Button
+			delPlayer = new SnekButton
 			{
 				Width = flow.Width / 3,
 				Height = flow.Height,
@@ -58,7 +79,7 @@ namespace Snake
 			{
 				Margin = Padding.Empty,
 				Height = flow.Height,
-				BackColor = Color.White,
+				ForeColor = Color.White,
 				Width = flow.Width / 3,
 				TextAlign = ContentAlignment.MiddleCenter,
 				Text = numplayers.ToString()
@@ -68,9 +89,12 @@ namespace Snake
 			flow.Controls.Add(players);
 			flow.Controls.Add(addPlayer);
 
-			startbtn.Location = new Point((width-startbtn.Width) / 2, 100);
+			snakelabel.Location = new Point((width - snakelabel.Width) / 2, 100);
+			startbtn.Location = new Point((width-startbtn.Width) / 2, snakelabel.Location.Y + snakelabel.Height + 50);
 			flow.Location = new Point((width - flow.Width) / 2, startbtn.Location.Y + startbtn.Height + 10);
+			quitbtn.Location = new Point((width - startbtn.Width) / 2, flow.Location.Y + flow.Height + 10);
 
+			Controls.Add(snakelabel);
 			Controls.Add(flow);
 			Controls.Add(quitbtn);
 			Controls.Add(startbtn);
@@ -79,6 +103,21 @@ namespace Snake
 			addPlayer.Click += ChangePlayer_Click;
 
 			startbtn.Click += Startbtn_Click;
+			quitbtn.Click += Quitbtn_Click;
+			Resize += MainMenu_Resize;
+		}
+
+		private void Quitbtn_Click(object sender, EventArgs e)
+		{
+			Application.Exit();
+		}
+
+		private void MainMenu_Resize(object sender, EventArgs e)
+		{
+			snakelabel.Location = new Point((Width - snakelabel.Width) / 2, 100);
+			startbtn.Location = new Point((Width - startbtn.Width) / 2, snakelabel.Location.Y + snakelabel.Height + 50);
+			flow.Location = new Point((Width - flow.Width) / 2, startbtn.Location.Y + startbtn.Height + 10);
+			quitbtn.Location = new Point((Width - startbtn.Width) / 2, flow.Location.Y + flow.Height + 10);
 		}
 
 		private void ChangePlayer_Click(object sender, EventArgs e)

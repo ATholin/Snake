@@ -19,8 +19,8 @@ namespace Snake
 			label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			label.Dock = DockStyle.Fill;
 
-			ForeColor = Color.Black;
-			Font = new Font("Arial", 20);
+			ForeColor = Color.White;
+			Font = new Font(SnakeGame.font.Families[0], 20);
 
 			Margin = Padding.Empty;
 

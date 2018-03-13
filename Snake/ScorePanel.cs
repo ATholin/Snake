@@ -47,14 +47,11 @@ namespace Snake
 				var pointstring = $"Player {index}: {s.points}";
 				playerpanels[index - 1].SetText(pointstring);
 				index++;
-
-				//e.Graphics.DrawString(s, font, brush, new Point((Width / playercount+index), (Height - font.Height) / 2));
 			}
 		}
 
 		PlayerPanel[] playerpanels;
 		int playercount;
-		Font font = new Font("Arial", 20);
 		Brush brush = new SolidBrush(Color.Black);
 
 		GameBoard game;

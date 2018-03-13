@@ -21,14 +21,6 @@ namespace Snake
 		public int Y { get; private set; }
 		public Point Piece { get { return new Point(X, Y); } }
 
-		/*
-		public static void Init(Food f, int X, int Y, int size)
-		{
-			f.brush = new SolidBrush(Color.White);
-			f.FoodPiece = new Rectangle(X, Y, size, size);
-		}
-		*/
-
 		public void Draw(Graphics g)
         {
 			g.FillRectangle(brush, X * Settings.Size, Y * Settings.Size, Settings.Size, Settings.Size);

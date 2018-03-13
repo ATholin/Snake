@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Snake
 {
 	public partial class SnakeGame : Form
 	{
+		public static PrivateFontCollection font = new PrivateFontCollection();
 		Timer timer;
 		ScorePanel scorepanel;
 		GameBoard game;
@@ -19,6 +21,8 @@ namespace Snake
 		public SnakeGame() : base()
 		{
 			InitializeComponent();
+
+			font.AddFontFile(@"../../font.ttf");
 
 			var menu = new MainMenu(Width, Height);
 			Controls.Add(menu);
