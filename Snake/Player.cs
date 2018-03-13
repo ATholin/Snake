@@ -48,22 +48,22 @@ namespace Snake
 
 		bool IsOppositeDir(Direction newdir)
 		{
-			if (direction == Direction.Up && newdir == Direction.Down)
+			if (Snake.lastDir == Direction.Up && newdir == Direction.Down)
 			{
 				return true;
 			}
 
-			if (direction == Direction.Down && newdir == Direction.Up)
+			if (Snake.lastDir == Direction.Down && newdir == Direction.Up)
 			{
 				return true;
 			}
 
-			if (direction == Direction.Left && newdir == Direction.Right)
+			if (Snake.lastDir == Direction.Left && newdir == Direction.Right)
 			{
 				return true;
 			}
 
-			if (direction == Direction.Right && newdir == Direction.Left)
+			if (Snake.lastDir == Direction.Right && newdir == Direction.Left)
 			{
 				return true;
 			}

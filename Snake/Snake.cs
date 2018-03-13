@@ -26,6 +26,7 @@ namespace Snake
 			}
 		}
 
+		public Direction lastDir;
 
 		public int counter = 0;
 		Score score = new Score(0);
@@ -106,6 +107,7 @@ namespace Snake
 					SnakeBody.First.Value = new Point(SnakeBody.First.Value.X + 1, SnakeBody.First.Value.Y);
 					break;
 			}
+			lastDir = direction;
 		}
 
 		public void OnCollision(Snake snake)
