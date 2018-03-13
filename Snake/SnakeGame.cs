@@ -72,8 +72,73 @@ namespace Snake
 
 		private void TimerEventHandler(object sender, EventArgs e)
 		{
-			game.Tick();
-			game.Refresh();
+			if (!game.Snakes.Count.Equals(0))
+			{
+				game.Tick();
+				game.Refresh();
+			} else
+			{
+				GameOver();
+			}
+		}
+
+		private void GameOver()
+		{
+			timer.Stop();
+			ShowWinner();
+		}
+
+		private void ShowWinner()
+		{
+			Player winner = game.Players[0];
+			int highest = -1;
+			int index = 0;
+			int windex = 0;
+
+			foreach(var player in game.Players)
+			{
+				index++;
+				if (player.Score > highest)
+				{
+					highest = player.Score;
+					winner = player;
+					windex = index;
+				}
+			}
+
+			var winnerlabel = new Label
+			{
+				Text = $"Player {windex} Wins!\n{winner.Score} Points",
+				Location = new Point(game.Location.X + 50, game.Location.Y + 50)
+			};
+			winnerlabel.Padding = new Padding(5);
+			winnerlabel.AutoSize = true;
+			winnerlabel.ForeColor = Color.Black;
+			winnerlabel.Font = new Font(SnakeGame.font.Families[0], 42);
+
+
+			var restartbtn = new SnekButton
+			{
+				Text = "Restart",
+				Location = new Point(winnerlabel.Location.X, winnerlabel.Location.Y + winnerlabel.Height * 6),
+				BackColor = Color.White,
+				AutoSize = true,
+				Font = new Font(SnakeGame.font.Families[0], 32),
+				Width = 200,
+				Height = 50
+			};
+
+			restartbtn.Click += Restart_Game;
+
+			Controls.Add(restartbtn);
+			Controls.Add(winnerlabel);
+			restartbtn.BringToFront();
+			winnerlabel.BringToFront();
+		}
+
+		private void Restart_Game(object sender, EventArgs e)
+		{
+			Application.Restart();
 		}
 
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)

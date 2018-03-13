@@ -24,7 +24,7 @@ namespace Snake
 
 			Margin = Padding.Empty;
 
-			Width = width-5;
+			Width = width;
 			Controls.Add(label);
 		}
 

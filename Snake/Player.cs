@@ -23,6 +23,7 @@ namespace Snake
 
 		Snake Snake;
 		public int Counter { get { return Snake.counter; } set { Snake.counter = value; } }
+		public int Score { get { return Snake.points; } }
 
 		public Keys Up;
 		public Keys Down;
