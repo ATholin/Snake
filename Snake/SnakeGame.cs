@@ -189,7 +189,7 @@ namespace Snake
 
 			var winnerlabel = new Label
 			{
-				Text = $"Player {windex} Wins!\n{winner.Score} Points",
+				Text = $"Player {windex} Wins!",
 				Location = new Point(game.Location.X + 50, game.Location.Y + 50)
 			};
 			winnerlabel.Padding = new Padding(5);
@@ -197,10 +197,20 @@ namespace Snake
 			winnerlabel.ForeColor = Color.Black;
 			winnerlabel.Font = new Font(SnakeGame.font.Families[0], 42);
 
+			var pointslabel = new Label
+			{
+				Text = $"{winner.Score} Points",
+				Location = new Point(winnerlabel.Location.X, winnerlabel.Location.Y + winnerlabel.Height+50)
+			};
+			pointslabel.Padding = new Padding(5);
+			pointslabel.AutoSize = true;
+			pointslabel.ForeColor = Color.Black;
+			pointslabel.Font = new Font(SnakeGame.font.Families[0], 26);
+
 			var restartinfo = new Label
 			{
 				Text = "Press Escape to restart",
-				Location = new Point(winnerlabel.Location.X, winnerlabel.Location.Y + winnerlabel.Height*6),
+				Location = new Point(pointslabel.Location.X, pointslabel.Location.Y + pointslabel.Height + 50),
 				ForeColor = Color.White,
 				BackColor = Color.Black,
 				AutoSize = true,
@@ -208,7 +218,9 @@ namespace Snake
 			};
 
 			Controls.Add(winnerlabel);
+			Controls.Add(pointslabel);
 			Controls.Add(restartinfo);
+			pointslabel.BringToFront();
 			winnerlabel.BringToFront();
 			restartinfo.BringToFront();
 		}
