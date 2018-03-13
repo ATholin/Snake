@@ -53,22 +53,27 @@ namespace Snake
 		{
 			Update();
 
-			int randX = rand.Next(0, Settings.Dimension);
-			int randY = rand.Next(0, Settings.Dimension);
+			int randX = rand.Next(0, Settings.Dimension-1);
+			int randY = rand.Next(0, Settings.Dimension-1);
 
 			if (Occupied[randX, randY] == 0)
 				return new Point(randX, randY);
 
-			while (Occupied[randX, randY] == 1)
+			int x = 0;
+			int y = 0;
+
+			for (;x < Settings.Dimension; x++)
 			{
-				randX += 1;
-				if (randX > Settings.Dimension)
+				for (;y < Settings.Dimension; y++)
 				{
-					randX = 0;
-					randY += 1;
+					if (Occupied[x,y] == 1)
+					{
+						continue;
+					}
 				}
 			}
-			return new Point(randX, randY);
+
+			return new Point(x, y);
 		}
 
 		public Food SpawnFood()

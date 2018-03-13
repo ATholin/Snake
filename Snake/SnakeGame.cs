@@ -33,7 +33,7 @@ namespace Snake
 
 			Paint += SnakeGame_Paint;
 
-			font.AddFontFile(@"../../font.ttf");
+			font.AddFontFile(@"../../Resources/font.ttf");
 
 			menu = new MainMenu(Width, Height);
 			Controls.Add(menu);
@@ -53,7 +53,7 @@ namespace Snake
 
 		private void SnakeGame_Paint(object sender, PaintEventArgs e)
 		{
-			Image newImage = Image.FromFile(@"../../bg.jpg");
+			Image newImage = Properties.Resources.bg;
 			
 			
 			for (int i = 0; i < Width; i += Width / 10)
@@ -64,11 +64,6 @@ namespace Snake
 					e.Graphics.DrawImage(newImage, srcRect);
 				}
 			}
-		}
-
-		public void AddPlayer()
-		{
-
 		}
 
 		private void ResizeWindow()
@@ -84,7 +79,7 @@ namespace Snake
 
 		private void Menu_StartButtonClicked(int numplayers)
 		{
-			game = new GameBoard(3);
+			game = new GameBoard();
 			Controls.Add(game);
 			ResizeWindow();
 
@@ -183,9 +178,6 @@ namespace Snake
 					winner = players[i];
 					windex = index;
 				}
-
-				
-				
 			}
 
 			var winnerlabel = new Label

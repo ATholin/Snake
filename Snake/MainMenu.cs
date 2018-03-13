@@ -21,6 +21,9 @@ namespace Snake
 
 		public MainMenu(int width, int height) : base()
 		{
+			Image newImage = Properties.Resources.bg;
+			BackgroundImage = newImage;
+
 			Width = width;
 			Height = height;
 			BackColor = Color.Black;

@@ -21,32 +21,29 @@ namespace Snake
 
 		FoodFactory foodFactory;
 
-		Player[] players;
-
-		public Player[] Players { get; }
+		public Player[] Players { get; protected set; }
 
 		public delegate void ScoreChangedHandler();
 		public event ScoreChangedHandler ScoreChanged;
 
-		public GameBoard(int players)
+		public GameBoard()
 		{
 			foodFactory = new FoodFactory(this);
 			foodFactory.InitFood();
-
-			this.players = new Player[players];
 
 			Paint += new PaintEventHandler(Draw);
 		}
 
 		public void AddPlayers(int p)
 		{
+			Players = new Player[p];
 			KeyIndex = new Dictionary<Keys, int>(p);
 
 			if (p >= 1)
 			{
 				var snake1 = new Snake(Settings.Dimension / (p+1) * 1, 2, Color.Blue);
 				var player = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake1);
-				players[0] = player;
+				Players[0] = player;
 				Snakes.Add(snake1);
 				KeyIndex.Add(Keys.Up, 0);
 				KeyIndex.Add(Keys.Down, 0);
@@ -57,7 +54,7 @@ namespace Snake
 			{
 				var snake2 = new Snake(Settings.Dimension / (p+1) * 2, 2, Color.Red);
 				var player2 = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snake2);
-				players[1] = player2;
+				Players[1] = player2;
 				Snakes.Add(snake2);
 				KeyIndex.Add(Keys.W, 1);
 				KeyIndex.Add(Keys.S, 1);
@@ -68,14 +65,14 @@ namespace Snake
 			{
 				var snake3 = new Snake(Settings.Dimension / (p+1) * 3, 2, Color.Green);
 				var player3 = new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3);
-				players[2] = player3;
+				Players[2] = player3;
 				Snakes.Add(snake3);
 			}
 		}
 
 		public void Tick()
 		{
-			foreach (var p in players)
+			foreach (var p in Players)
 			{
 				if (p.Counter > 0)
 				{
@@ -91,7 +88,7 @@ namespace Snake
 
 			foreach(var snek in Snakes)
 			{
-				if (snek.SnakeBody.First.Value.X > Settings.Dimension || snek.SnakeBody.First.Value.X < 0 || snek.SnakeBody.First.Value.Y > Settings.Dimension || snek.SnakeBody.First.Value.Y < 0)
+				if (snek.SnakeBody.First.Value.X >= Settings.Dimension || snek.SnakeBody.First.Value.X < 0 || snek.SnakeBody.First.Value.Y >= Settings.Dimension || snek.SnakeBody.First.Value.Y < 0)
 				{
 					ToRemove.Add(snek);
 				}
@@ -141,13 +138,9 @@ namespace Snake
 
 		internal void ChangeDirection(Direction dir, int index)
 		{
-			players[index].ChangeDir(dir);
+			Players[index].ChangeDir(dir);
 		}
 
-		public void Add(Snake snake)
-		{
-			Snakes.Add(snake);
-		}
 
 		public void Add(Food food)
 		{
