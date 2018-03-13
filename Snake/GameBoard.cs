@@ -12,7 +12,7 @@ namespace Snake
 {
     public class GameBoard : Panel
     {
-		Dictionary<Keys, Player> players;
+		Dictionary<Keys, int> KeyIndex;
 
 		public ISet<Snake> Snakes = new HashSet<Snake>();
 		public ISet<Snake> ToRemove = new HashSet<Snake>();
@@ -21,17 +21,9 @@ namespace Snake
 
 		FoodFactory foodFactory;
 
-		public Player[] Players { get
-			{
-				Player[] p = new Player[players.Count];
-				int index = 0;
-				foreach(var player in players)
-				{
-					p[index++] = player.Value;
-				}
-				return p;
-			}
-		}
+		Player[] players;
+
+		public Player[] Players { get; }
 
 		public delegate void ScoreChangedHandler();
 		public event ScoreChangedHandler ScoreChanged;
@@ -41,53 +33,50 @@ namespace Snake
 			foodFactory = new FoodFactory(this);
 			foodFactory.InitFood();
 
-			this.players = new Dictionary<Keys, Player>(players);
+			this.players = new Player[players];
 
 			Paint += new PaintEventHandler(Draw);
 		}
 
 		public void AddPlayers(int p)
 		{
+			KeyIndex = new Dictionary<Keys, int>(p);
 
 			if (p >= 1)
 			{
 				var snake1 = new Snake(Settings.Dimension / (p+1) * 1, 2, Color.Blue);
 				var player = new Player(Keys.Up, Keys.Down, Keys.Left, Keys.Right, snake1);
-				players.Add(Keys.Up, player);
-				players.Add(Keys.Down, player);
-				players.Add(Keys.Left, player);
-				players.Add(Keys.Right, player);
+				players[0] = player;
 				Snakes.Add(snake1);
+				KeyIndex.Add(Keys.Up, 0);
+				KeyIndex.Add(Keys.Down, 0);
+				KeyIndex.Add(Keys.Left, 0);
+				KeyIndex.Add(Keys.Right, 0);
 			}
 			if (p >= 2)
 			{
 				var snake2 = new Snake(Settings.Dimension / (p+1) * 2, 2, Color.Red);
 				var player2 = new Player(Keys.W, Keys.S, Keys.A, Keys.D, snake2);
-				players.Add(Keys.W, player2);
-				players.Add(Keys.S, player2);
-				players.Add(Keys.A, player2);
-				players.Add(Keys.D, player2);
+				players[1] = player2;
 				Snakes.Add(snake2);
+				KeyIndex.Add(Keys.W, 1);
+				KeyIndex.Add(Keys.S, 1);
+				KeyIndex.Add(Keys.A, 1);
+				KeyIndex.Add(Keys.D, 1);
 			}
 			if (p >= 3)
 			{
 				var snake3 = new Snake(Settings.Dimension / (p+1) * 3, 2, Color.Green);
 				var player3 = new Player(Keys.I, Keys.K, Keys.J, Keys.L, snake3);
-				players.Add(Keys.I, player3);
-				players.Add(Keys.K, player3);
-				players.Add(Keys.J, player3);
-				players.Add(Keys.L, player3);
+				players[2] = player3;
 				Snakes.Add(snake3);
 			}
 		}
 
 		public void Tick()
 		{
-            int index = 0;
-			foreach (var p in players.Values)
+			foreach (var p in players)
 			{
-				if (index++ % 4 != 0)
-					continue;
 				if (p.Counter > 0)
 				{
 					p.MoveSnake();
@@ -149,24 +138,10 @@ namespace Snake
 				f.Draw(e.Graphics);
 			}
 		}
-		internal void MoveUp(Keys key)
-		{
-			players[key].ChangeDir(Direction.Up);
-		}
 
-		internal void MoveDown(Keys key)
+		internal void ChangeDirection(Direction dir, int index)
 		{
-			players[key].ChangeDir(Direction.Down);
-		}
-
-		internal void MoveLeft(Keys key)
-		{
-			players[key].ChangeDir(Direction.Left);
-		}
-
-		internal void MoveRight(Keys key)
-		{
-			players[key].ChangeDir(Direction.Right);
+			players[index].ChangeDir(dir);
 		}
 
 		public void Add(Snake snake)

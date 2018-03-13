@@ -44,7 +44,7 @@ namespace Snake
 			int index = 1;
 			foreach (var s in Snakes)
 			{
-				var pointstring = s.points.ToString();
+				var pointstring = s.Points.ToString();
 				playerpanels[index - 1].SetText(pointstring);
 				index++;
 			}

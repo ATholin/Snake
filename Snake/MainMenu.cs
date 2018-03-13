@@ -12,7 +12,7 @@ namespace Snake
 	{
 		int numplayers = 1;
 		FlowLayoutPanel flow;
-		Label players;
+		Label numplayerslabel;
 		Label snakelabel;
 		SnekButton startbtn;
 		SnekButton quitbtn;
@@ -35,24 +35,6 @@ namespace Snake
 			startbtn.Click += Startbtn_Click;
 			quitbtn.Click += Quitbtn_Click;
 			Resize += MainMenu_Resize;
-
-			Paint += MainMenu_Paint;
-		}
-
-		private void MainMenu_Paint(object sender, PaintEventArgs e)
-		{
-			// Create image.
-			Image newImage = Image.FromFile(@"../../bg.jpg");
-			// Create coordinates for upper-left corner of image.
-			int x = 0;
-			int y = 0;
-
-			// Create rectangle for source image.
-			Rectangle srcRect = new Rectangle(0, 0, Width, 10000);
-			GraphicsUnit units = GraphicsUnit.Pixel;
-
-			// Draw image to screen.
-			e.Graphics.DrawImage(newImage, x, y, srcRect, units);
 		}
 
 		private void Initialize()
@@ -112,7 +94,7 @@ namespace Snake
 				Margin = Padding.Empty
 			};
 
-			players = new Label
+			numplayerslabel = new Label
 			{
 				BackColor = Color.Black,
 				Margin = Padding.Empty,
@@ -124,7 +106,7 @@ namespace Snake
 			};
 
 			flow.Controls.Add(delPlayer);
-			flow.Controls.Add(players);
+			flow.Controls.Add(numplayerslabel);
 			flow.Controls.Add(addPlayer);
 
 			snakelabel.Location = new Point((Width - snakelabel.Width) / 2, 100);
@@ -156,8 +138,11 @@ namespace Snake
 			var btn = sender as Button;
 			if (btn.Text.Equals("+"))
 			{
-				if (numplayers<Settings.MaxPlayers)
+
+				if (numplayers < Settings.MaxPlayers)
+				{
 					numplayers++;
+				}
 			} else
 			{
 				if (numplayers> 1)
@@ -166,8 +151,10 @@ namespace Snake
 				}
 			}
 
-			players.Text = numplayers.ToString();
-			flow.Refresh();
+			numplayerslabel.Text = numplayers.ToString();
+			
+
+			Refresh();
 		}
 
 		private void Startbtn_Click(object sender, EventArgs e)

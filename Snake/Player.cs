@@ -24,7 +24,7 @@ namespace Snake
 
 		Snake Snake;
 		public int Counter { get { return Snake.counter; } set { Snake.counter = value; } }
-		public int Score { get { return Snake.points; } }
+		public int Score { get { return Snake.Points; } }
 		public Color Color { get { return Snake.SnakeColor; } }
 
 		public Keys Up;
@@ -74,8 +74,7 @@ namespace Snake
 		{
 			if (obj == null) return 1;
 
-			Player otherTemperature = obj as Player;
-			if (otherTemperature != null)
+			if (obj is Player otherTemperature)
 				return this.Score.CompareTo(otherTemperature.Score);
 			else
 				throw new ArgumentException("Object is not a Player");

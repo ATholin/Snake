@@ -15,6 +15,14 @@ namespace Snake
 		{
 			FlatStyle = FlatStyle.Flat;
 			BackColor = Color.DarkGray;
+			quickfix();
+		}
+
+		public void quickfix()
+		{
+			Text = "Y U DO DIS";
+			Height = 50;
+			Width = 50;
 		}
 	}
 }

@@ -11,8 +11,14 @@ using System.Windows.Forms;
 
 namespace Snake
 {
+
+
 	public partial class SnakeGame : Form
 	{
+		Player[] players;
+
+		MainMenu menu;
+
 		public static PrivateFontCollection font = new PrivateFontCollection();
 		Timer timer;
 		int time;
@@ -29,7 +35,7 @@ namespace Snake
 
 			font.AddFontFile(@"../../font.ttf");
 
-			var menu = new MainMenu(Width, Height);
+			menu = new MainMenu(Width, Height);
 			Controls.Add(menu);
 			menu.BringToFront();
 
@@ -47,7 +53,22 @@ namespace Snake
 
 		private void SnakeGame_Paint(object sender, PaintEventArgs e)
 		{
+			Image newImage = Image.FromFile(@"../../bg.jpg");
 			
+			
+			for (int i = 0; i < Width; i += Width / 10)
+			{
+				for (int k = 0; k < Height; k += Height / 10)
+				{
+					Rectangle srcRect = new Rectangle(i, k, Width / 10, Height / 10);
+					e.Graphics.DrawImage(newImage, srcRect);
+				}
+			}
+		}
+
+		public void AddPlayer()
+		{
+
 		}
 
 		private void ResizeWindow()
@@ -67,7 +88,8 @@ namespace Snake
 			Controls.Add(game);
 			ResizeWindow();
 
-			Settings.NumPlayers = numplayers;
+			players = new Player[numplayers];
+
 			game.AddPlayers(numplayers);
 
 			scorepanel = new ScorePanel(game, Width);
@@ -79,8 +101,10 @@ namespace Snake
 	
 			game.ScoreChanged += Game_ScoreChanged;
 
-			countdowntimer = new Timer();
-			countdowntimer.Interval = 1000;
+			countdowntimer = new Timer
+			{
+				Interval = 1000
+			};
 			countdowntimer.Tick += Countdowntimer_Tick;
 			time = 3;
 			game.Refresh();
@@ -108,11 +132,12 @@ namespace Snake
 			timelabel = new Label
 			{
 				Text = "3",
+				Padding = new Padding(5),
+				AutoSize = true,
+				ForeColor = Color.Black,
+				Font = new Font(SnakeGame.font.Families[0], 52),
 			};
-			timelabel.Padding = new Padding(5);
-			timelabel.AutoSize = true;
-			timelabel.ForeColor = Color.Black;
-			timelabel.Font = new Font(SnakeGame.font.Families[0], 52);
+
 			Controls.Add(timelabel);
 			timelabel.BringToFront();
 			countdowntimer.Start();
@@ -204,44 +229,44 @@ namespace Snake
 			{
 				//PLAYER ONE
 				case Keys.Up:
-					game.MoveUp(e.KeyCode);
+					game.ChangeDirection(Direction.Up, 0);
 					break;
 				case Keys.Down:
-					game.MoveDown(e.KeyCode);
+					game.ChangeDirection(Direction.Down, 0);
 					break;
 				case Keys.Left:
-					game.MoveLeft(e.KeyCode);
+					game.ChangeDirection(Direction.Left, 0);
 					break;
 				case Keys.Right:
-					game.MoveRight(e.KeyCode);
+					game.ChangeDirection(Direction.Right, 0);
 					break;
 
 				//PLAYER TWO
 				case Keys.W:
-					game.MoveUp(e.KeyCode);
+					game.ChangeDirection(Direction.Up, 1);
 					break;
 				case Keys.S:
-					game.MoveDown(e.KeyCode);
+					game.ChangeDirection(Direction.Down, 1);
 					break;
 				case Keys.A:
-					game.MoveLeft(e.KeyCode);
+					game.ChangeDirection(Direction.Left, 1);
 					break;
 				case Keys.D:
-					game.MoveRight(e.KeyCode);
+					game.ChangeDirection(Direction.Right, 1);
 					break;
 
 				//PLAYER THREE
 				case Keys.I:
-					game.MoveUp(e.KeyCode);
+					game.ChangeDirection(Direction.Up, 2);
 					break;
 				case Keys.K:
-					game.MoveDown(e.KeyCode);
+					game.ChangeDirection(Direction.Down, 2);
 					break;
 				case Keys.J:
-					game.MoveLeft(e.KeyCode);
+					game.ChangeDirection(Direction.Left, 2);
 					break;
 				case Keys.L:
-					game.MoveRight(e.KeyCode);
+					game.ChangeDirection(Direction.Right, 2);
 					break;
 			}
 		}

@@ -29,7 +29,7 @@ namespace Snake
 
 		public int counter = 0;
 		Score score = new Score(0);
-		public int points { get { return score.score; } }
+		public int Points { get { return score.score; } }
 
 		public LinkedList<Point> SnakeBody { get; private set; }
 		SolidBrush brush;
