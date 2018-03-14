@@ -1,77 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace Snake
 {
-	class FoodFactory
+	internal class FoodFactory
 	{
-		GameBoard game;
-		Random rand = new Random();
-		int[,] Occupied;
+		private readonly GameBoard _game;
+		private readonly int[,] _occupied;
+		private readonly Random _random = new Random();
 
 		public FoodFactory(GameBoard game)
 		{
-			this.game = game;
-			Occupied = new int[Settings.Dimension, Settings.Dimension];
+			_game = game;
+			_occupied = new int[Settings.Dimension, Settings.Dimension];
 		}
 
-		public void Reset()
+		private void Reset()
 		{
-			for(int x = 0; x < Settings.Dimension; x++)
-			{
-				for (int y = 0; y < Settings.Dimension; y++)
-				{
-					Occupied[x, y] = 0;
-				}
-			}
+			for (var x = 0; x < Settings.Dimension; x++)
+			for (var y = 0; y < Settings.Dimension; y++)
+				_occupied[x, y] = 0;
 		}
 
-		public void Update()
+		private void Update()
 		{
 			Reset();
 
-			foreach(var snake in game.Snakes)
-			{
-				foreach(var snakepart in snake.SnakeBody)
-				{
-					Occupied[snakepart.X, snakepart.Y] = 1;
-				}
-			}
+			foreach (var snake in _game.Snakes)
+			foreach (var snakepart in snake.SnakeBody)
+				_occupied[snakepart.X, snakepart.Y] = 1;
 
-			foreach(var food in game.Foods)
-			{
-				Occupied[food.X, food.Y] = 1;
-			}
+			foreach (var food in _game.Foods) _occupied[food.X, food.Y] = 1;
 		}
 
-		public Point GetAvailableSpot()
+		private Point GetAvailableSpot()
 		{
 			Update();
 
-			int randX = rand.Next(0, Settings.Dimension);
-			int randY = rand.Next(0, Settings.Dimension);
-			int placeschecked = 0;
+			var randX = _random.Next(0, Settings.Dimension);
+			var randY = _random.Next(0, Settings.Dimension);
+			var placeschecked = 0;
 
-			while(Occupied[randX, randY] == 1)
+			while (_occupied[randX, randY] == 1)
 			{
 				if (++placeschecked == Math.Pow(Settings.Dimension, 2))
 				{
-
 				}
+
 				randX++;
 				if (randX == Settings.Dimension)
 				{
 					randX = 0;
 					randY++;
-					if (randY == Settings.Dimension)
-					{
-						randY = 0;
-					}
+					if (randY == Settings.Dimension) randY = 0;
 				}
 			}
 
@@ -80,27 +61,21 @@ namespace Snake
 
 		public Food SpawnFood()
 		{
-			var generate = rand.Next(0, 100);
+			var generate = _random.Next(0, 100);
 			var foodpoint = GetAvailableSpot();
 
 			if (generate < 20)
 			{
-				if (generate< 5)
-				{
-					return new SpeedFood(game, foodpoint.X, foodpoint.Y);
-				}
+				if (generate < 5) return new SpeedFood(_game, foodpoint.X, foodpoint.Y);
 				return new RareFood(foodpoint.X, foodpoint.Y);
 			}
+
 			return new NormalFood(foodpoint.X, foodpoint.Y);
 		}
 
 		public void InitFood()
 		{
-			for (int i = 0; i < Settings.MaxFood; i++)
-			{
-				game.Add(SpawnFood());
-			}
-			
+			for (var i = 0; i < Settings.MaxFood; i++) _game.Add(SpawnFood());
 		}
 	}
 }

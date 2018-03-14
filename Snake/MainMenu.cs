@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
+using Snake.Properties;
 
 namespace Snake
 {
-	class MainMenu : Control
+	internal class MainMenu : Control
 	{
-		int numplayers = 1;
-		FlowLayoutPanel flow;
-		Label numplayerslabel;
-		Label snakelabel;
-		Label infolabel;
-		SnekButton startbtn;
-		SnekButton quitbtn;
-		SnekButton addPlayer;
-		SnekButton delPlayer;
+		public delegate void StartButtonClick(int numplayers);
 
-		public MainMenu(int width, int height) : base()
+		private SnekButton addPlayer;
+		private SnekButton delPlayer;
+		private FlowLayoutPanel flow;
+		private Label infolabel;
+		private int numplayers = 1;
+		private Label numplayerslabel;
+		private SnekButton quitbtn;
+		private Label snakelabel;
+		private SnekButton startbtn;
+
+		public MainMenu(int width, int height)
 		{
-			Image newImage = Properties.Resources.bg;
+			Image newImage = Resources.bg;
 			BackgroundImage = newImage;
 
 			Width = width;
@@ -40,7 +39,8 @@ namespace Snake
 			quitbtn.Click += Quitbtn_Click;
 			Resize += MainMenu_Resize;
 
-			PreviewKeyDown += MainMenu_PreviewKeyDown; ;
+			PreviewKeyDown += MainMenu_PreviewKeyDown;
+			;
 		}
 
 		private void MainMenu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -64,8 +64,7 @@ namespace Snake
 
 		private void Initialize()
 		{
-			var NinePlusTen = 21;
-			var lfont = new Font(SnakeGame.font.Families[0], NinePlusTen);
+			var lfont = new Font(SnakeGame.font.Families[0], 21);
 
 			snakelabel = new Label
 			{
@@ -84,7 +83,7 @@ namespace Snake
 				Font = lfont,
 				Text = "Start",
 				Width = Width - 300,
-				Height = 100,
+				Height = 100
 			};
 
 			quitbtn = new SnekButton
@@ -143,9 +142,9 @@ namespace Snake
 				ForeColor = Color.White,
 				Width = flow.Width,
 				TextAlign = ContentAlignment.MiddleCenter,
-				Text =	"<  > : add/remove players\n" +
-						"Enter: Start game\n" +
-						"Escape : quit"
+				Text = "<  > : add/remove players\n" +
+				       "Enter: Start game\n" +
+				       "Escape : quit"
 			};
 
 			flow.Controls.Add(delPlayer);
@@ -165,7 +164,7 @@ namespace Snake
 			Controls.Add(infolabel);
 		}
 
-		private void Quitbtn_Click(object sender, EventArgs e)
+		private static void Quitbtn_Click(object sender, EventArgs e)
 		{
 			Application.Exit();
 		}
@@ -180,26 +179,22 @@ namespace Snake
 
 		private void ChangePlayer_Click(object sender, EventArgs e)
 		{
-			var btn = sender as Button;
-			if (btn.Text.Equals("+"))
+			if (sender is Button btn)
 			{
+				if (btn.Text.Equals("+"))
+				{
+					if (numplayers < Settings.MaxPlayers) numplayers++;
+				}
+				else
+				{
+					if (numplayers > 1) numplayers--;
+				}
 
-				if (numplayers < Settings.MaxPlayers)
-				{
-					numplayers++;
-				}
-			} else
-			{
-				if (numplayers> 1)
-				{
-					numplayers--;
-				}
+				numplayerslabel.Text = numplayers.ToString();
+
+
+				Refresh();
 			}
-
-			numplayerslabel.Text = numplayers.ToString();
-			
-
-			Refresh();
 		}
 
 		private void Startbtn_Click(object sender, EventArgs e)
@@ -208,7 +203,6 @@ namespace Snake
 			StartButtonClicked?.Invoke(numplayers);
 		}
 
-		public delegate void StartButtonClick(int numplayers);
 		public event StartButtonClick StartButtonClicked;
 	}
 }

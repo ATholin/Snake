@@ -1,83 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace Snake
 {
-	public class Player: IComparable
+	public class Player
 	{
+		private readonly Snake _snake;
+		private Direction _direction;
+		private Keys _down;
+		private Keys _left;
+		private Keys _right;
+
+		private Keys _up;
+
 		public Player(Keys up, Keys down, Keys left, Keys right, Snake snake)
 		{
-			Up = up;
-			Down = down;
-			Left = left;
-			Right = right;
-			Snake = snake;
-			direction = Direction.Down;
+			_up = up;
+			_down = down;
+			_left = left;
+			_right = right;
+			_snake = snake;
+			_direction = Direction.Down;
 		}
 
-		//TODO: SNAKE DIR BUFFER
+		public int Counter
+		{
+			get => _snake.Counter;
+			set => _snake.Counter = value;
+		}
 
-		Snake Snake;
-		public int Counter { get { return Snake.counter; } set { Snake.counter = value; } }
-		public int Score { get { return Snake.Points; } }
-		public Color Color { get { return Snake.SnakeColor; } }
-
-		public Keys Up;
-		public Keys Down;
-		public Keys Left;
-		public Keys Right;
-		Direction direction;
+		public int Score => _snake.Points;
+		public Color Color => _snake.SnakeColor;
 
 		public void MoveSnake()
 		{
-			Snake.MoveSnake(direction);
+			_snake.MoveSnake(_direction);
 		}
 
 		public void ChangeDir(Direction dir)
 		{
-			if (!IsOppositeDir(dir))
-			{
-				direction = dir;
-			}
+			if (!IsOppositeDir(dir)) _direction = dir;
 		}
 
-		bool IsOppositeDir(Direction newdir)
+		private bool IsOppositeDir(Direction newdir)
 		{
-			if (Snake.lastDir == Direction.Up && newdir == Direction.Down)
+			switch (_snake.LastDir)
 			{
-				return true;
+				case Direction.Up:
+					if (newdir == Direction.Down)
+						return true;
+					break;
+				case Direction.Down:
+					if (newdir == Direction.Up)
+						return true;
+					break;
+				case Direction.Left:
+					if (newdir == Direction.Right)
+						return true;
+					break;
+				case Direction.Right:
+					if (newdir == Direction.Left)
+						return true;
+					break;
 			}
 
-			if (Snake.lastDir == Direction.Down && newdir == Direction.Up)
-			{
-				return true;
-			}
-
-			if (Snake.lastDir == Direction.Left && newdir == Direction.Right)
-			{
-				return true;
-			}
-
-			if (Snake.lastDir == Direction.Right && newdir == Direction.Left)
-			{
-				return true;
-			}
 			return false;
-		}
-
-		public int CompareTo(object obj)
-		{
-			if (obj == null) return 1;
-
-			if (obj is Player otherTemperature)
-				return this.Score.CompareTo(otherTemperature.Score);
-			else
-				throw new ArgumentException("Object is not a Player");
 		}
 	}
 }

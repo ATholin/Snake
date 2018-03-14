@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using Snake.Interface;
-using System.Drawing;
 
 namespace Snake
 {
-	class RareFood : Food, ICollidable
+	internal class RareFood : Food, ICollidable
 	{
 		public RareFood(int x, int y) : base(x, y)
 		{

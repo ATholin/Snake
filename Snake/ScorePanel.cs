@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Snake
 {
-	class ScorePanel : FlowLayoutPanel
+	internal class ScorePanel : FlowLayoutPanel
 	{
+		private readonly PlayerPanel[] playerpanels;
+
+		private readonly ISet<Snake> Snakes = new HashSet<Snake>();
+
 		public ScorePanel(GameBoard game, int width)
 		{
 			Width = width;
@@ -18,16 +17,14 @@ namespace Snake
 			Padding = Padding.Empty;
 			Height = 100;
 
-
-			this.game = game;
-			playercount = game.Snakes.Count;
+			var playercount = game.Snakes.Count;
 			playerpanels = new PlayerPanel[playercount];
 
-			int index = 0;
+			var index = 0;
 			foreach (var snake in game.Snakes)
 			{
 				Snakes.Add(snake);
-				playerpanels[index] = new PlayerPanel("", (Width/playercount)-playercount*playercount)
+				playerpanels[index] = new PlayerPanel("", Width / playercount - playercount * playercount)
 				{
 					BackColor = snake.SnakeColor
 				};
@@ -41,7 +38,7 @@ namespace Snake
 
 		public void UpdatePanels()
 		{
-			int index = 1;
+			var index = 1;
 			foreach (var s in Snakes)
 			{
 				var pointstring = s.Points.ToString();
@@ -49,12 +46,5 @@ namespace Snake
 				index++;
 			}
 		}
-
-		PlayerPanel[] playerpanels;
-		int playercount;
-		Brush brush = new SolidBrush(Color.Black);
-
-		GameBoard game;
-		ISet<Snake> Snakes = new HashSet<Snake>();
 	}
 }

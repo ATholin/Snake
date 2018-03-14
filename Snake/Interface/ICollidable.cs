@@ -2,10 +2,10 @@
 
 namespace Snake.Interface
 {
-    public interface ICollidable
-    {
-        bool Intersects(Snake snake);
-        void OnCollision(Snake snake);
-        void Draw(Graphics g);
-    }
+	public interface ICollidable
+	{
+		bool Intersects(Snake snake);
+		void OnCollision(Snake snake);
+		void Draw(Graphics g);
+	}
 }

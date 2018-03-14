@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Snake.Interface;
 using System.Drawing;
+using System.Linq;
+using Snake.Interface;
 
 namespace Snake
 {
-	class SpeedFood : Food, ICollidable
+	internal class SpeedFood : Food, ICollidable
 	{
-		GameBoard Game;
+		private readonly GameBoard Game;
 
 		public SpeedFood(GameBoard game, int x, int y) : base(x, y)
 		{
@@ -27,7 +24,7 @@ namespace Snake
 		public Snake GetRandomSnake()
 		{
 			var arr = Game.Snakes.ToArray();
-			Random r = new Random();
+			var r = new Random();
 			return arr[r.Next(0, arr.Length)];
 		}
 	}

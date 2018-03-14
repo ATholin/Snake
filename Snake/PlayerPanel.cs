@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace Snake
 {
 	public class PlayerPanel : Panel
 	{
+		private readonly Label _label;
+
 		public PlayerPanel(string s, int width)
 		{
-			label = new Label
+			_label = new Label
 			{
 				Text = s
 			};
-			label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			label.Dock = DockStyle.Fill;
+			_label.TextAlign = ContentAlignment.MiddleCenter;
+			_label.Dock = DockStyle.Fill;
 
 			ForeColor = Color.White;
 			Font = new Font(SnakeGame.font.Families[0], 20);
@@ -25,11 +22,12 @@ namespace Snake
 			Margin = Padding.Empty;
 
 			Width = width;
-			Controls.Add(label);
+			Controls.Add(_label);
 		}
 
-		public void SetText(string s) => label.Text = s;
-
-		public Label label;
+		public void SetText(string s)
+		{
+			_label.Text = s;
+		}
 	}
 }

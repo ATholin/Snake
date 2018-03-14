@@ -1,33 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Snake.Properties;
 
 namespace Snake
 {
-
-
 	public partial class SnakeGame : Form
 	{
-		Player[] players;
-
-		MainMenu menu;
-
 		public static PrivateFontCollection font = new PrivateFontCollection();
-		Timer timer;
-		int time;
-		Label timelabel;
-		Timer countdowntimer;
-		ScorePanel scorepanel;
-		GameBoard game;
+		private Timer countdowntimer;
+		private GameBoard game;
 
-		public SnakeGame() : base()
+		private readonly MainMenu menu;
+		private Player[] players;
+		private ScorePanel scorepanel;
+		private int time;
+		private Label timelabel;
+		private readonly Timer timer;
+
+		public SnakeGame()
 		{
 			InitializeComponent();
 
@@ -47,8 +39,8 @@ namespace Snake
 			DoubleBuffered = true;
 
 			timer = new Timer();
-			timer.Tick += new EventHandler(TimerEventHandler);
-			timer.Interval = 1000/Settings.FPS;
+			timer.Tick += TimerEventHandler;
+			timer.Interval = 1000 / Settings.FPS;
 		}
 
 		private void Game_BoardFull()
@@ -58,22 +50,19 @@ namespace Snake
 
 		private void SnakeGame_Paint(object sender, PaintEventArgs e)
 		{
-			Image newImage = Properties.Resources.bg;
-			
-			
-			for (int i = 0; i < Width; i += Width / 10)
+			Image newImage = Resources.bg;
+
+
+			for (var i = 0; i < Width; i += Width / 10)
+			for (var k = 0; k < Height; k += Height / 10)
 			{
-				for (int k = 0; k < Height; k += Height / 10)
-				{
-					Rectangle srcRect = new Rectangle(i, k, Width / 10, Height / 10);
-					e.Graphics.DrawImage(newImage, srcRect);
-				}
+				var srcRect = new Rectangle(i, k, Width / 10, Height / 10);
+				e.Graphics.DrawImage(newImage, srcRect);
 			}
 		}
 
 		private void ResizeWindow()
 		{
-			
 			var smallest = Math.Min(Width, Height - 150);
 			smallest -= smallest % Settings.Dimension;
 			game.Width = smallest;
@@ -98,7 +87,7 @@ namespace Snake
 			game.Location = new Point((Width - game.Width) / 2, 0);
 			game.Padding = Padding.Empty;
 			game.Margin = Padding.Empty;
-	
+
 			game.ScoreChanged += Game_ScoreChanged;
 			game.BoardFull += Game_BoardFull;
 
@@ -110,7 +99,7 @@ namespace Snake
 			time = 3;
 			game.Refresh();
 			Countdown();
-			timelabel.Location = new Point((Width-timelabel.Width)/2, (game.Height - timelabel.Height) / 2);
+			timelabel.Location = new Point((Width - timelabel.Width) / 2, (game.Height - timelabel.Height) / 2);
 		}
 
 		private void Countdowntimer_Tick(object sender, EventArgs e)
@@ -120,7 +109,8 @@ namespace Snake
 				time--;
 				timelabel.Text = time.ToString();
 				Refresh();
-			} else
+			}
+			else
 			{
 				countdowntimer.Stop();
 				timelabel.Visible = false;
@@ -135,9 +125,9 @@ namespace Snake
 				Text = "3",
 				Width = 100,
 				Height = 100,
-				TextAlign = System.Drawing.ContentAlignment.TopCenter,
+				TextAlign = ContentAlignment.TopCenter,
 				ForeColor = Color.Black,
-				Font = new Font(SnakeGame.font.Families[0], 52),
+				Font = new Font(font.Families[0], 52)
 			};
 
 			Controls.Add(timelabel);
@@ -156,7 +146,8 @@ namespace Snake
 			{
 				game.Tick();
 				game.Refresh();
-			} else
+			}
+			else
 			{
 				GameOver();
 			}
@@ -170,13 +161,13 @@ namespace Snake
 
 		private void ShowWinner()
 		{
-			Player winner = game.Players[0];
+			var winner = game.Players[0];
 			var players = game.Players;
-			int highest = -1;
-			int index = 0;
-			int windex = 0;
+			var highest = -1;
+			var index = 0;
+			var windex = 0;
 
-			for(int i = 0; i < players.Length; i += 4)
+			for (var i = 0; i < players.Length; i += 4)
 			{
 				index++;
 				if (players[i].Score > highest)
@@ -195,17 +186,17 @@ namespace Snake
 			winnerlabel.Padding = new Padding(5);
 			winnerlabel.AutoSize = true;
 			winnerlabel.ForeColor = Color.Black;
-			winnerlabel.Font = new Font(SnakeGame.font.Families[0], 42);
+			winnerlabel.Font = new Font(font.Families[0], 42);
 
 			var pointslabel = new Label
 			{
 				Text = $"{winner.Score} Points",
-				Location = new Point(winnerlabel.Location.X, winnerlabel.Location.Y + winnerlabel.Height+50)
+				Location = new Point(winnerlabel.Location.X, winnerlabel.Location.Y + winnerlabel.Height + 50)
 			};
 			pointslabel.Padding = new Padding(5);
 			pointslabel.AutoSize = true;
 			pointslabel.ForeColor = Color.Black;
-			pointslabel.Font = new Font(SnakeGame.font.Families[0], 26);
+			pointslabel.Font = new Font(font.Families[0], 26);
 
 			var restartinfo = new Label
 			{
@@ -214,7 +205,7 @@ namespace Snake
 				ForeColor = Color.White,
 				BackColor = Color.Black,
 				AutoSize = true,
-				Font = new Font(SnakeGame.font.Families[0], 16),
+				Font = new Font(font.Families[0], 16)
 			};
 
 			Controls.Add(winnerlabel);
@@ -228,7 +219,6 @@ namespace Snake
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (!menu.Visible)
-			{
 				switch (e.KeyCode)
 				{
 					//PLAYER ONE
@@ -277,13 +267,9 @@ namespace Snake
 						Application.Restart();
 						break;
 					case Keys.Enter:
-						if (timer.Enabled)
-						{
-							Application.Restart();
-						}
+						if (timer.Enabled) Application.Restart();
 						break;
 				}
-			}
 		}
 	}
 }

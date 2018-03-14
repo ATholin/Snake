@@ -1,50 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Snake.Interface;
 
 namespace Snake
 {
 	public class Snake : ICollidable
 	{
+		private readonly SolidBrush _brush;
+		private readonly Score _score = new Score(0);
+
+		public int Counter;
+
+		public Direction LastDir;
+
 		public Snake(int x, int y, Color color)
 		{
-			brush = new SolidBrush(Color.White);
+			_brush = new SolidBrush(Color.White);
 
 			SnakeBody = new LinkedList<Point>();
 
-			brush.Color = color;
+			_brush.Color = color;
 
-			for (int i = 0; i < 3; i++)
+			for (var i = 0; i < 3; i++)
 			{
 				SnakeBody.AddFirst(new Point(x, y));
 				y += 1;
 			}
 		}
 
-		public Direction lastDir;
+		public int Points => _score.score;
 
-		public int counter = 0;
-		Score score = new Score(0);
-		public int Points { get { return score.score; } }
+		public LinkedList<Point> SnakeBody { get; }
 
-		public LinkedList<Point> SnakeBody { get; private set; }
-		SolidBrush brush;
+		public Color SnakeColor => _brush.Color;
 
-		public Color SnakeColor { get { return brush.Color; } }
-
-		public Rectangle SnakeHeadRect { get { return new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y, Settings.Size, Settings.Size); } }
+		public Rectangle SnakeHeadRect =>
+			new Rectangle(SnakeBody.First.Value.X, SnakeBody.First.Value.Y, Settings.Size, Settings.Size);
 
 		public void Draw(Graphics g)
 		{
-			foreach(var snakepart in SnakeBody)
-			{
-				g.FillRectangle(brush, snakepart.X*Settings.Size, snakepart.Y*Settings.Size, Settings.Size, Settings.Size);
-			}
+			foreach (var snakepart in SnakeBody)
+				g.FillRectangle(_brush, snakepart.X * Settings.Size, snakepart.Y * Settings.Size, Settings.Size, Settings.Size);
 		}
 
 		public bool Intersects(Snake enemysnek)
@@ -53,12 +49,9 @@ namespace Snake
 			{
 				var node = SnakeBody.First.Next;
 
-				while(node != null)
+				while (node != null)
 				{
-					if (SnakeBody.First.Value.Equals(node.Value))
-					{
-						return true;
-					}
+					if (SnakeBody.First.Value.Equals(node.Value)) return true;
 					node = node.Next;
 				}
 			}
@@ -73,10 +66,17 @@ namespace Snake
 						enemysnek.OnCollision(this);
 						return true;
 					}
+
 					node = node.Next;
 				}
 			}
+
 			return false;
+		}
+
+		public void OnCollision(Snake snake)
+		{
+			AddPoints(5);
 		}
 
 		public void MoveSnake(Direction direction)
@@ -85,10 +85,7 @@ namespace Snake
 
 			while (node != null)
 			{
-				if (node.Previous != null)
-				{
-					node.Value = node.Previous.Value;
-				}
+				if (node.Previous != null) node.Value = node.Previous.Value;
 				node = node.Previous;
 			}
 
@@ -107,12 +104,8 @@ namespace Snake
 					SnakeBody.First.Value = new Point(SnakeBody.First.Value.X + 1, SnakeBody.First.Value.Y);
 					break;
 			}
-			lastDir = direction;
-		}
 
-		public void OnCollision(Snake snake)
-		{
-			AddPoints(5);
+			LastDir = direction;
 		}
 
 		public void Grow(int points) // ;)
@@ -130,12 +123,12 @@ namespace Snake
 
 		public void SpeedUp()
 		{
-			counter = (1000 / Settings.FPS) * 10;
+			Counter = 1000 / Settings.FPS * 10;
 		}
 
 		public void AddPoints(int points)
 		{
-			score.UpdateScore(points);
+			_score.UpdateScore(points);
 		}
 	}
 }

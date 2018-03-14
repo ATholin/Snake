@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Snake
+﻿namespace Snake
 {
 	public class Score
 	{
 		public Score(int score)
 		{
-			CurrentScore = score;
+			this.score = score;
 		}
 
-		int CurrentScore;
-
-		public int score { get { return CurrentScore; } }
+		public int score { get; private set; }
 
 		public void UpdateScore(int s)
 		{
-			CurrentScore += s;
+			score += s;
 		}
 	}
 }
