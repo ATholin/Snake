@@ -9,15 +9,15 @@ namespace Snake
 	public partial class SnakeGame : Form
 	{
 		public static PrivateFontCollection font = new PrivateFontCollection();
-		private Timer countdowntimer;
-		private GameBoard game;
 
 		private readonly MainMenu menu;
+		private readonly Timer timer;
+		private Timer countdowntimer;
+		private GameBoard game;
 		private Player[] players;
 		private ScorePanel scorepanel;
 		private int time;
 		private Label timelabel;
-		private readonly Timer timer;
 
 		public SnakeGame()
 		{

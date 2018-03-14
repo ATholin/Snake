@@ -8,8 +8,8 @@ namespace Snake
 	{
 		private readonly SolidBrush _brush;
 		private readonly Score _score = new Score(0);
-
 		public int Counter;
+		public bool isAlive = true;
 
 		public Direction LastDir;
 
@@ -51,7 +51,12 @@ namespace Snake
 
 				while (node != null)
 				{
-					if (SnakeBody.First.Value.Equals(node.Value)) return true;
+					if (SnakeBody.First.Value.Equals(node.Value))
+					{
+						isAlive = false;
+						return true;
+					}
+
 					node = node.Next;
 				}
 			}
@@ -64,6 +69,7 @@ namespace Snake
 					if (SnakeBody.First.Value.Equals(node.Value))
 					{
 						enemysnek.OnCollision(this);
+						isAlive = false;
 						return true;
 					}
 

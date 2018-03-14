@@ -61,15 +61,16 @@ namespace Snake
 		public void Tick()
 		{
 			foreach (var p in Players)
-				if (p.Counter > 0)
-				{
-					p.MoveSnake();
-					p.Counter--;
-				}
-				else
-				{
-					p.Counter = 1;
-				}
+				if (p.isalive)
+					if (p.Counter > 0)
+					{
+						p.MoveSnake();
+						p.Counter--;
+					}
+					else
+					{
+						p.Counter = 1;
+					}
 
 			foreach (var snek in Snakes)
 			{

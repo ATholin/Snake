@@ -29,6 +29,8 @@ namespace Snake
 			set => _snake.Counter = value;
 		}
 
+		public bool isalive => _snake.isAlive;
+
 		public int Score => _snake.Points;
 		public Color Color => _snake.SnakeColor;
 
