@@ -10,6 +10,7 @@ namespace Snake
 			brush = new SolidBrush(Color.White);
 		}
 
+		// Grows snake by 1, adds 1 point
 		public override void OnCollision(Snake snake)
 		{
 			snake.Grow(1);

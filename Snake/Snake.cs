@@ -43,8 +43,10 @@ namespace Snake
 				g.FillRectangle(_brush, snakepart.X * Settings.Size, snakepart.Y * Settings.Size, Settings.Size, Settings.Size);
 		}
 
+		// Check if snake intersects with another snake
 		public bool Intersects(Snake enemysnek)
 		{
+			// If the snake is self, do not check the head (instant collision)
 			if (SnakeColor == enemysnek.SnakeColor)
 			{
 				var node = SnakeBody.First.Next;
@@ -80,11 +82,14 @@ namespace Snake
 			return false;
 		}
 
+		// If a snake dies by hitting you, you gain 5 points.
 		public void OnCollision(Snake snake)
 		{
 			AddPoints(5);
 		}
 
+		// Enumerate from tail, go to head
+		// Move current to the one in front.
 		public void MoveSnake(Direction direction)
 		{
 			var node = SnakeBody.Last;
@@ -95,6 +100,7 @@ namespace Snake
 				node = node.Previous;
 			}
 
+			//Move the head depending on the direction.
 			switch (direction)
 			{
 				case Direction.Up:
@@ -114,12 +120,14 @@ namespace Snake
 			LastDir = direction;
 		}
 
+		// Add a new point at tail
 		public void Grow(int points) // ;)
 		{
 			SnakeBody.AddLast(new Point(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y));
 			AddPoints(points);
 		}
 
+		// Add to points at tail
 		public void DoubleGrow(int points) // ;)
 		{
 			SnakeBody.AddLast(new Point(SnakeBody.Last.Value.X, SnakeBody.Last.Value.Y));

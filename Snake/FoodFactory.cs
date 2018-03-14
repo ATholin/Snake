@@ -3,6 +3,7 @@ using System.Drawing;
 
 namespace Snake
 {
+	// Handles food spawning and board matrix for available spots
 	internal class FoodFactory
 	{
 		private readonly GameBoard _game;
@@ -33,6 +34,7 @@ namespace Snake
 			foreach (var food in _game.Foods) _occupied[food.X, food.Y] = 1;
 		}
 
+		// Pick a random spot, and iterate through the matrix until we are at the initial spot again, or we find an unoccupied spot.
 		private Point GetAvailableSpot()
 		{
 			Update();
@@ -43,9 +45,8 @@ namespace Snake
 
 			while (_occupied[randX, randY] == 1)
 			{
-				if (++placeschecked == Math.Pow(Settings.Dimension, 2))
-				{
-				}
+				//If we checked Dimension^2, then all of the spots are occupied, and the game is over.
+				if (++placeschecked == Math.Pow(Settings.Dimension, 2)) return new Point(-1, -1);
 
 				randX++;
 				if (randX == Settings.Dimension)
@@ -59,6 +60,10 @@ namespace Snake
 			return new Point(randX, randY);
 		}
 
+		// Spawns a random food.
+		// 80% that it is a NormalFood
+		// 15% that it is a RareFood
+		// 5% that it is a SpeedFood
 		public Food SpawnFood()
 		{
 			var generate = _random.Next(0, 100);

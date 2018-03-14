@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 namespace Snake
 {
+	// The actual game board.
 	public class GameBoard : Panel
 	{
 		public delegate void BoardFullHandler();
@@ -29,6 +30,10 @@ namespace Snake
 		public event ScoreChangedHandler ScoreChanged;
 		public event BoardFullHandler BoardFull;
 
+		// Add p amount of players.
+		// Tested and working for up to 3 players
+		// Should support up to 16 players (not tested)
+		// TODO: dynamic picking of keys.
 		public void AddPlayers(int p)
 		{
 			Players = new Player[p];
@@ -60,8 +65,10 @@ namespace Snake
 
 		public void Tick()
 		{
+			// Move snake every other tick
+			// If snake has eaten SpeedUp Food -> Move snake every tick for 10 seconds
 			foreach (var p in Players)
-				if (p.isalive)
+				if (p.IsAlive)
 					if (p.Counter > 0)
 					{
 						p.MoveSnake();
@@ -72,6 +79,7 @@ namespace Snake
 						p.Counter = 1;
 					}
 
+			// Check collision with walls, snakes and food.
 			foreach (var snek in Snakes)
 			{
 				if (snek.SnakeBody.First.Value.X >= Settings.Dimension || snek.SnakeBody.First.Value.X < 0 ||
@@ -81,6 +89,7 @@ namespace Snake
 				foreach (var enemysnek in Snakes)
 					if (snek.Intersects(enemysnek))
 					{
+						// Can not remove while enumerating, add to additional array and remove after enumerating
 						_toRemove.Add(snek);
 						ScoreChanged?.Invoke();
 					}
@@ -88,6 +97,7 @@ namespace Snake
 				foreach (var food in Foods)
 					if (food.Intersects(snek))
 					{
+						// Can not remove while enumerating, add to additional array and remove after enumerating
 						_foodToRemove.Add(food);
 						ScoreChanged?.Invoke();
 					}
@@ -123,6 +133,8 @@ namespace Snake
 			Foods.Add(food);
 		}
 
+		// Enumerate arrays, remove them from Snakes and Foods array
+		// For each food removed, spawn new food.
 		private void RemoveObjects()
 		{
 			foreach (var s in _toRemove) Snakes.Remove(s);

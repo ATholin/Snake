@@ -24,6 +24,8 @@ namespace Snake
 			foreach (var snake in game.Snakes)
 			{
 				Snakes.Add(snake);
+				// Width depending on number of players
+				// 3 players = panel is 1/3 of the form width
 				playerpanels[index] = new PlayerPanel("", Width / playercount - playercount * playercount)
 				{
 					BackColor = snake.SnakeColor

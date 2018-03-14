@@ -17,7 +17,7 @@ namespace Snake
 			_label.Dock = DockStyle.Fill;
 
 			ForeColor = Color.White;
-			Font = new Font(SnakeGame.font.Families[0], 20);
+			Font = new Font(SnakeGame._Font.Families[0], 20);
 
 			Margin = Padding.Empty;
 

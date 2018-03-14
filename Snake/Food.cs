@@ -22,6 +22,7 @@ namespace Snake
 			g.FillRectangle(brush, X * Settings.Size, Y * Settings.Size, Settings.Size, Settings.Size);
 		}
 
+		// Check if Snake snake "head" intersects with current food instance.
 		public bool Intersects(Snake snake)
 		{
 			if (snake.SnakeBody.First.Value == Piece)

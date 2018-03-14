@@ -10,7 +10,6 @@ namespace Snake
 		private Keys _down;
 		private Keys _left;
 		private Keys _right;
-
 		private Keys _up;
 
 		public Player(Keys up, Keys down, Keys left, Keys right, Snake snake)
@@ -29,7 +28,7 @@ namespace Snake
 			set => _snake.Counter = value;
 		}
 
-		public bool isalive => _snake.isAlive;
+		public bool IsAlive => _snake.isAlive;
 
 		public int Score => _snake.Points;
 		public Color Color => _snake.SnakeColor;
@@ -44,6 +43,12 @@ namespace Snake
 			if (!IsOppositeDir(dir)) _direction = dir;
 		}
 
+		// Prevents snake from ever going back into self
+		// Previous implementation allowed for infinite changes in one tick, as long as it wasnt going the opposite of current direction
+		// Since this was checked every time you changed direction, you could i.e go be going upwards, change direction to left and then down
+		// On the next move, you would move into yourself and die
+
+		// Current implementation checks for the last direction when moving, and never allows moving the opposite of that direction.
 		private bool IsOppositeDir(Direction newdir)
 		{
 			switch (_snake.LastDir)

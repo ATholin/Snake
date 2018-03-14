@@ -8,39 +8,42 @@ namespace Snake
 {
 	public partial class SnakeGame : Form
 	{
-		public static PrivateFontCollection font = new PrivateFontCollection();
+		public static readonly PrivateFontCollection _Font = new PrivateFontCollection();
+		private readonly GameBoard _game;
 
-		private readonly MainMenu menu;
-		private readonly Timer timer;
-		private Timer countdowntimer;
-		private GameBoard game;
-		private Player[] players;
-		private ScorePanel scorepanel;
-		private int time;
-		private Label timelabel;
+		private readonly MainMenu _menu;
+		private readonly Timer _timer;
+		private Timer _countdowntimer;
+		private Player[] _players;
+		private ScorePanel _scorepanel;
+		private int _time;
+		private Label _timelabel;
 
 		public SnakeGame()
 		{
+			_game = new GameBoard();
+			Controls.Add(_game);
+
 			InitializeComponent();
 
 			Paint += SnakeGame_Paint;
 
-			font.AddFontFile(@"../../Resources/font.ttf");
+			_Font.AddFontFile(@"../../Resources/font.ttf");
 
-			menu = new MainMenu(Width, Height);
-			Controls.Add(menu);
-			menu.BringToFront();
+			_menu = new MainMenu(Width, Height);
+			Controls.Add(_menu);
+			_menu.BringToFront();
 
-			menu.StartButtonClicked += Menu_StartButtonClicked;
+			_menu.StartButtonClicked += Menu_StartButtonClicked;
 
 			KeyDown += GameForm_KeyDown;
 			KeyPreview = true;
 
 			DoubleBuffered = true;
 
-			timer = new Timer();
-			timer.Tick += TimerEventHandler;
-			timer.Interval = 1000 / Settings.FPS;
+			_timer = new Timer();
+			_timer.Tick += TimerEventHandler;
+			_timer.Interval = 1000 / Settings.FPS;
 		}
 
 		private void Game_BoardFull()
@@ -65,87 +68,84 @@ namespace Snake
 		{
 			var smallest = Math.Min(Width, Height - 150);
 			smallest -= smallest % Settings.Dimension;
-			game.Width = smallest;
-			game.Height = smallest;
+			_game.Width = smallest;
+			_game.Height = smallest;
 			Settings.Size = smallest / Settings.Dimension;
-			game.Refresh();
+			_game.Refresh();
 		}
 
 		private void Menu_StartButtonClicked(int numplayers)
 		{
-			game = new GameBoard();
-			Controls.Add(game);
 			ResizeWindow();
+			_game.Location = new Point((Width - _game.Width) / 2, 0);
 
-			players = new Player[numplayers];
+			_players = new Player[numplayers];
+			_game.AddPlayers(numplayers);
 
-			game.AddPlayers(numplayers);
+			_game.Padding = Padding.Empty;
+			_game.Margin = Padding.Empty;
 
-			scorepanel = new ScorePanel(game, Width);
-			Controls.Add(scorepanel);
+			_game.ScoreChanged += Game_ScoreChanged;
+			_game.BoardFull += Game_BoardFull;
 
-			game.Location = new Point((Width - game.Width) / 2, 0);
-			game.Padding = Padding.Empty;
-			game.Margin = Padding.Empty;
+			_scorepanel = new ScorePanel(_game, Width);
+			Controls.Add(_scorepanel);
 
-			game.ScoreChanged += Game_ScoreChanged;
-			game.BoardFull += Game_BoardFull;
-
-			countdowntimer = new Timer
+			_countdowntimer = new Timer
 			{
 				Interval = 1000
 			};
-			countdowntimer.Tick += Countdowntimer_Tick;
-			time = 3;
-			game.Refresh();
+			_countdowntimer.Tick += Countdowntimer_Tick;
+			_time = 3;
+			_game.Refresh();
 			Countdown();
-			timelabel.Location = new Point((Width - timelabel.Width) / 2, (game.Height - timelabel.Height) / 2);
+			_timelabel.Location = new Point((Width - _timelabel.Width) / 2, (_game.Height - _timelabel.Height) / 2);
 		}
 
 		private void Countdowntimer_Tick(object sender, EventArgs e)
 		{
-			if (time > 1)
+			if (_time > 1)
 			{
-				time--;
-				timelabel.Text = time.ToString();
+				_time--;
+				_timelabel.Text = _time.ToString();
 				Refresh();
 			}
 			else
 			{
-				countdowntimer.Stop();
-				timelabel.Visible = false;
-				timer.Start();
+				_countdowntimer.Stop();
+				_timelabel.Visible = false;
+				_timer.Start();
 			}
 		}
 
 		private void Countdown()
 		{
-			timelabel = new Label
+			_timelabel = new Label
 			{
 				Text = "3",
 				Width = 100,
 				Height = 100,
 				TextAlign = ContentAlignment.TopCenter,
 				ForeColor = Color.Black,
-				Font = new Font(font.Families[0], 52)
+				Font = new Font(_Font.Families[0], 52)
 			};
 
-			Controls.Add(timelabel);
-			timelabel.BringToFront();
-			countdowntimer.Start();
+			Controls.Add(_timelabel);
+			_timelabel.BringToFront();
+			_countdowntimer.Start();
 		}
 
 		private void Game_ScoreChanged()
 		{
-			scorepanel.UpdatePanels();
+			_scorepanel.UpdatePanels();
 		}
 
 		private void TimerEventHandler(object sender, EventArgs e)
 		{
-			if (!game.Snakes.Count.Equals(0))
+			if (!_game.Snakes.Count.Equals(0))
 			{
-				game.Tick();
-				game.Refresh();
+				_game.Tick();
+				_game.Refresh();
 			}
 			else
 			{
@@ -155,14 +155,14 @@ namespace Snake
 
 		private void GameOver()
 		{
-			timer.Stop();
+			_timer.Stop();
 			ShowWinner();
 		}
 
 		private void ShowWinner()
 		{
-			var winner = game.Players[0];
-			var players = game.Players;
+			var winner = _game.Players[0];
+			var players = _game.Players;
 			var highest = -1;
 			var index = 0;
 			var windex = 0;
@@ -181,12 +181,12 @@ namespace Snake
 			var winnerlabel = new Label
 			{
 				Text = $"Player {windex} Wins!",
-				Location = new Point(game.Location.X + 50, game.Location.Y + 50)
+				Location = new Point(_game.Location.X + 50, _game.Location.Y + 50)
 			};
 			winnerlabel.Padding = new Padding(5);
 			winnerlabel.AutoSize = true;
 			winnerlabel.ForeColor = Color.Black;
-			winnerlabel.Font = new Font(font.Families[0], 42);
+			winnerlabel.Font = new Font(_Font.Families[0], 42);
 
 			var pointslabel = new Label
 			{
@@ -196,7 +196,7 @@ namespace Snake
 			pointslabel.Padding = new Padding(5);
 			pointslabel.AutoSize = true;
 			pointslabel.ForeColor = Color.Black;
-			pointslabel.Font = new Font(font.Families[0], 26);
+			pointslabel.Font = new Font(_Font.Families[0], 26);
 
 			var restartinfo = new Label
 			{
@@ -205,7 +205,7 @@ namespace Snake
 				ForeColor = Color.White,
 				BackColor = Color.Black,
 				AutoSize = true,
-				Font = new Font(font.Families[0], 16)
+				Font = new Font(_Font.Families[0], 16)
 			};
 
 			Controls.Add(winnerlabel);
@@ -218,56 +218,56 @@ namespace Snake
 
 		private void GameForm_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (!menu.Visible)
+			if (!_menu.Visible)
 				switch (e.KeyCode)
 				{
 					//PLAYER ONE
 					case Keys.Up:
-						game.ChangeDirection(Direction.Up, 0);
+						_game.ChangeDirection(Direction.Up, 0);
 						break;
 					case Keys.Down:
-						game.ChangeDirection(Direction.Down, 0);
+						_game.ChangeDirection(Direction.Down, 0);
 						break;
 					case Keys.Left:
-						game.ChangeDirection(Direction.Left, 0);
+						_game.ChangeDirection(Direction.Left, 0);
 						break;
 					case Keys.Right:
-						game.ChangeDirection(Direction.Right, 0);
+						_game.ChangeDirection(Direction.Right, 0);
 						break;
 
 					//PLAYER TWO
 					case Keys.W:
-						game.ChangeDirection(Direction.Up, 1);
+						_game.ChangeDirection(Direction.Up, 1);
 						break;
 					case Keys.S:
-						game.ChangeDirection(Direction.Down, 1);
+						_game.ChangeDirection(Direction.Down, 1);
 						break;
 					case Keys.A:
-						game.ChangeDirection(Direction.Left, 1);
+						_game.ChangeDirection(Direction.Left, 1);
 						break;
 					case Keys.D:
-						game.ChangeDirection(Direction.Right, 1);
+						_game.ChangeDirection(Direction.Right, 1);
 						break;
 
 					//PLAYER THREE
 					case Keys.I:
-						game.ChangeDirection(Direction.Up, 2);
+						_game.ChangeDirection(Direction.Up, 2);
 						break;
 					case Keys.K:
-						game.ChangeDirection(Direction.Down, 2);
+						_game.ChangeDirection(Direction.Down, 2);
 						break;
 					case Keys.J:
-						game.ChangeDirection(Direction.Left, 2);
+						_game.ChangeDirection(Direction.Left, 2);
 						break;
 					case Keys.L:
-						game.ChangeDirection(Direction.Right, 2);
+						_game.ChangeDirection(Direction.Right, 2);
 						break;
 
 					case Keys.Escape:
 						Application.Restart();
 						break;
 					case Keys.Enter:
-						if (timer.Enabled) Application.Restart();
+						if (_timer.Enabled) Application.Restart();
 						break;
 				}
 		}
